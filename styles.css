@@ -20,21 +20,22 @@
     --neon-magenta: #f0f;
     --neon-yellow: #ff0;
     --text-color: #e0e0e0;
-    --font-heading: 'Aeroblade', sans-serif;
-    --font-body: 'Aero', sans-serif;
-    --font-mono: 'Aero', monospace;
+    /* Custom fonts first, Google Fonts as a safe fallback if a file fails */
+    --font-heading: 'Aeroblade', 'Orbitron', sans-serif;
+    --font-body: 'Aero', 'Rajdhani', sans-serif;
+    --font-mono: 'Fira Code', monospace;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
 }
 
 html {
     width: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -290,8 +291,14 @@ h3 {
     text-shadow: 0 0 10px var(--neon-yellow);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
     width: 100%;
+}
+
+.nav-links a.active {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
 }
 
 /* Hamburger button */
@@ -518,9 +525,17 @@ body.no-scroll {
 .hero .description {
     font-size: 1.2rem;
     max-width: 600px;
-    margin: 0 auto 3rem auto;
+    margin: 0 auto 2.5rem auto;
     line-height: 1.6;
-    color: #aaa;
+    color: #c8c8c8;
+}
+
+/* Hero action buttons */
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 /* Terminal / About Section */
@@ -563,7 +578,7 @@ body.no-scroll {
 }
 
 .terminal-header .title {
-    color: #888;
+    color: #aaa;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     margin-left: 15px;
@@ -612,6 +627,76 @@ body.no-scroll {
 
     50% {
         opacity: 0;
+    }
+}
+
+/* Skills strip */
+.skills-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 800px;
+    margin: 2rem auto 0;
+}
+
+.skill-badge {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--neon-cyan);
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    background: rgba(0, 255, 255, 0.04);
+    padding: 0.4rem 0.9rem;
+    letter-spacing: 1px;
+    transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+.skill-badge:hover {
+    color: var(--neon-yellow);
+    border-color: var(--neon-yellow);
+    box-shadow: 0 0 12px rgba(255, 255, 0, 0.25);
+    transform: translateY(-3px);
+}
+
+/* Scroll reveal animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Terminal boot print – lines appear sequentially when terminal reveals */
+.terminal-window.reveal .terminal-body p {
+    opacity: 0;
+}
+
+.terminal-window.visible .terminal-body p {
+    animation: bootLine 0.45s ease forwards;
+}
+
+.terminal-window.visible .terminal-body p:nth-child(1) { animation-delay: 0.15s; }
+.terminal-window.visible .terminal-body p:nth-child(2) { animation-delay: 0.35s; }
+.terminal-window.visible .terminal-body p:nth-child(3) { animation-delay: 0.55s; }
+.terminal-window.visible .terminal-body p:nth-child(4) { animation-delay: 0.75s; }
+.terminal-window.visible .terminal-body p:nth-child(5) { animation-delay: 0.95s; }
+.terminal-window.visible .terminal-body p:nth-child(6) { animation-delay: 1.15s; }
+.terminal-window.visible .terminal-body p:nth-child(7) { animation-delay: 1.35s; }
+.terminal-window.visible .terminal-body p:nth-child(8) { animation-delay: 1.55s; }
+
+@keyframes bootLine {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 
@@ -680,7 +765,7 @@ body.no-scroll {
 }
 
 .card-content p {
-    color: #aaa;
+    color: #c8c8c8;
     margin-bottom: 25px;
     flex-grow: 1;
 }
@@ -722,7 +807,7 @@ body.no-scroll {
 
 .copyright {
     font-family: var(--font-mono);
-    color: #555;
+    color: #8a8a8a;
     font-size: 0.9rem;
 }
 
@@ -950,5 +1035,37 @@ body.no-scroll {
     .social-links .cyber-button {
         width: 100%;
         text-align: center;
+    }
+}
+
+/* ============================================================
+   ACCESSIBILITY – reduce motion for sensitive users
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .grid-bg {
+        animation: none;
+    }
+
+    #bg-canvas {
+        display: none;
+    }
+
+    .glitch::before,
+    .glitch::after {
+        display: none;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
     }
 }
