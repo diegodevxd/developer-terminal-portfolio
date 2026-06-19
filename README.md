@@ -42,11 +42,11 @@ npx http-server -p 8000
 
 Luego abre `http://localhost:8000`.
 
-## Pendientes / por personalizar
+## Despliegue
 
-- Agregar el archivo `Diego_Mancera_CV.pdf` en la raíz para que funcione el botón "Descargar CV".
-- Agregar una imagen `og-image.png` (1200×630) para la vista previa al compartir el enlace.
-- Actualizar las URLs `og:url` / `og:image` con el dominio final cuando esté desplegado.
+Desplegado en Vercel: https://developer-terminal-portfolio-dqg2.vercel.app/
+
+El CV (`cv/Diego_Mancera_CV.pdf`) y la imagen de previsualización (`og-image.jpg`, 1200×630) ya están incluidos, y los meta tags de Open Graph apuntan al dominio de producción.
 
 ## Licencia
 
