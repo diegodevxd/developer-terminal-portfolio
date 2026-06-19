@@ -4,18 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cyberpunk personal portfolio of a systems engineering student.">
-    <title>Portafolio Diego</title>
+    <meta name="description" content="Portafolio personal cyberpunk de un estudiante de Ingeniería en Sistemas.">
+    <meta name="author" content="Diego Fernando Mancera Gómez">
+    <meta name="keywords" content="desarrollador, portafolio, ingeniería en sistemas, frontend, web developer, freelance, Diego Mancera">
+    <meta name="theme-color" content="#050505">
+    <title>Diego Mancera // Desarrollador & Estudiante de Ing. en Sistemas</title>
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Diego Mancera // Desarrollador & Estudiante de Ing. en Sistemas">
+    <meta property="og:description" content="Portafolio personal cyberpunk. Desarrollo web freelance, IA local y proyectos de bajo nivel en Linux.">
+    <meta property="og:image" content="og-image.png">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Diego Mancera // Desarrollador & Estudiante de Ing. en Sistemas">
+    <meta name="twitter:description" content="Portafolio personal cyberpunk. Desarrollo web freelance, IA local y proyectos de bajo nivel en Linux.">
+    <meta name="twitter:image" content="og-image.png">
+
+    <!-- Favicon (inline SVG, sin archivos extra) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%2300ffff' stroke-width='1.5'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' font-weight='bold' fill='%2300ffff'%3ED%3C/text%3E%3C/svg%3E">
+
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
-    <canvas id="bg-canvas"></canvas>
-    <div class="scanlines"></div>
-    <div class="grid-bg"></div>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="grid-bg" aria-hidden="true"></div>
 
     <nav class="navbar">
         <div class="logo">SYS.ENG_<span>DIEGO</span></div>
@@ -41,17 +63,20 @@
             <span class="hero-corner tl"></span>
             <span class="hero-corner br"></span>
             <div class="hero-badge">// SYS.STATUS: ONLINE //</div>
-            <h1 class="glitch" data-text="HOLA, MUNDO //">HOLA, MUNDO //</h1>
+            <h1 class="glitch" data-i18n="hero_title" data-text="HOLA, MUNDO //">HOLA, MUNDO //</h1>
             <h2 class="subtitle" data-i18n="hero_role">Desarrollador & Estudiante de Ing. en Sistemas (5/12 Semestres)
             </h2>
             <p class="description" data-i18n="hero_desc">Construyendo el futuro digital. Experiencia en freelance,
                 desarrollo web y creación de experiencias interactivas.</p>
-            <a href="#projects" class="cyber-button primary" data-i18n="hero_cta">INICIAR SECUENCIA_</a>
+            <div class="hero-actions">
+                <a href="#projects" class="cyber-button primary" data-i18n="hero_cta">INICIAR SECUENCIA_</a>
+                <a href="cv/Diego_Mancera_CV.pdf" download class="cyber-button" data-i18n="hero_cv">DESCARGAR CV_</a>
+            </div>
         </div>
     </header>
 
     <section id="about" class="section container">
-        <h2 class="section-title glitch" data-text=">PERFIL_">>PERFIL_</h2>
+        <h2 class="section-title glitch" data-i18n="title_profile" data-text=">PERFIL_">>PERFIL_</h2>
         <div class="about-content">
             <div class="terminal-window">
                 <div class="terminal-header">
@@ -66,7 +91,7 @@
                         Sistemas. Apasionado por la tecnología, la estética cyberpunk y la creación de arquitecturas
                         limpias y eficientes.</p>
                     <p><span class="prompt">user@sys_eng:~$</span> get_skills --tech</p>
-                    <p class="output highlight">HTML5, CSS3, JavaScript, UI/UX, Git, Programación Orientada a Objetos
+                    <p class="output highlight">HTML5, CSS3, JavaScript, Rust, Java, Python, Linux, UI/UX, Git, Programación Orientada a Objetos
                     </p>
                     <p><span class="prompt">user@sys_eng:~$</span> get_experience --list</p>
                     <p class="output" data-i18n="about_text2">Trabajo freelance apoyando a pequeños negocios locales a
@@ -75,11 +100,24 @@
                     <p><span class="prompt">user@sys_eng:~$</span> <span class="cursor"></span></p>
                 </div>
             </div>
+
+            <div class="skills-strip" aria-label="Stack tecnológico">
+                <span class="skill-badge">HTML5</span>
+                <span class="skill-badge">CSS3</span>
+                <span class="skill-badge">JavaScript</span>
+                <span class="skill-badge">Rust</span>
+                <span class="skill-badge">Java</span>
+                <span class="skill-badge">Python</span>
+                <span class="skill-badge">Linux</span>
+                <span class="skill-badge">Git</span>
+                <span class="skill-badge">UI / UX</span>
+                <span class="skill-badge">POO</span>
+            </div>
         </div>
     </section>
 
     <section id="projects" class="section container">
-        <h2 class="section-title glitch" data-text=">BASE_DE_DATOS_PROYECTOS_">>BASE_DE_DATOS_PROYECTOS_</h2>
+        <h2 class="section-title glitch" data-i18n="title_projects" data-text=">BASE_DE_DATOS_PROYECTOS_">>BASE_DE_DATOS_PROYECTOS_</h2>
         <div class="projects-grid">
 
             <div class="cyber-card">
@@ -134,7 +172,7 @@
     </section>
 
    <section id="certifications" class="section container">
-        <h2 class="section-title glitch" data-text=">CERTIFICACIONES_">>CERTIFICACIONES_</h2>
+        <h2 class="section-title glitch" data-i18n="title_certifications" data-text=">CERTIFICACIONES_">>CERTIFICACIONES_</h2>
         <div class="projects-grid">
 
             <div class="cyber-card">
@@ -183,7 +221,7 @@
     </section>
 
     <footer id="contact" class="footer container">
-        <h2 class="glitch" data-text=">ESTABLECER_CONEXIÓN_">>ESTABLECER_CONEXIÓN_</h2>
+        <h2 class="glitch" data-i18n="title_contact" data-text=">ESTABLECER_CONEXIÓN_">>ESTABLECER_CONEXIÓN_</h2>
         <div class="social-links">
             <a href="https://github.com/diegodevxd" target="_blank" class="cyber-button">GITHUB_</a>
             <a href="https://www.linkedin.com/in/diego-fernando-mancera-gomez-73932540b/" target="_blank" class="cyber-button">LINKEDIN_</a>
