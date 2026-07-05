@@ -1,13 +1,21 @@
 // ============================================================
 // NEON DIGITAL RAIN – canvas background animation
+// Fallback background: bg3d.js starts it on mobile / no-WebGL,
+// and the safety timer at the bottom of this file starts it if
+// the 3D module never takes over (CDN down, no import maps…).
 // ============================================================
-(function () {
+window.__rainStarted = false;
+window.__startMatrixRain = function () {
+    if (window.__rainStarted) return;
+
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
 
     // Respect users who prefer reduced motion: skip the animation entirely.
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
+
+    window.__rainStarted = true;
 
     const ctx = canvas.getContext('2d');
 
@@ -83,7 +91,15 @@
     });
 
     start();
-}());
+};
+
+// Safety net: if after 2s neither the 3D background nor the rain is
+// running, fall back to the rain so the page never loses its backdrop.
+setTimeout(function () {
+    if (!window.__bg3dActive && !window.__rainStarted) {
+        window.__startMatrixRain();
+    }
+}, 2000);
 
 // ============================================================
 const translations = {
@@ -97,11 +113,11 @@ const translations = {
         nav_about: "Acerca de",
         nav_projects: "Proyectos",
         nav_contact: "Contacto",
-        hero_role: "Desarrollador & Estudiante de Ing. en Sistemas (5/12 Semestres)",
+        hero_role: "Desarrollador & Estudiante de Ing. en Sistemas (6/12 Semestres)",
         hero_desc: "Construyendo el futuro digital. Experiencia en freelance, desarrollo web y creación de experiencias interactivas.",
         hero_cta: "INICIAR SECUENCIA_",
         hero_cv: "DESCARGAR CV_",
-        about_text1: "Soy estudiante de 5to semestre (de 12) de Ingeniería en Sistemas. Apasionado por la tecnología, la estética cyberpunk y la creación de arquitecturas limpias y eficientes.",
+        about_text1: "Soy estudiante de 6to semestre (de 12) de Ingeniería en Sistemas. Apasionado por la tecnología, la estética cyberpunk y la creación de arquitecturas limpias y eficientes.",
         about_text2: "Trabajo freelance apoyando a pequeños negocios locales a digitalizarse. Creo portafolios únicos, páginas para empresas y he participado en el desarrollo algorítmico de videojuegos estilo novela visual.",
         proj_mevek_desc: "Sitio web comercial para tienda de electrónica local. Diseño adaptable y moderno para exhibición de productos tecnológicos.",
         proj_capi_desc: "Asistente de IA local en desarrollo para tesis universitaria. Arquitectura diseñada para ejecución eficiente en hardware local.",
@@ -113,6 +129,7 @@ const translations = {
         cert_lfc102_desc: "The Linux Foundation. Orientación inclusiva y metodologías de colaboración en comunidades Open Source.",
         cert_cecati_desc: "Certificación en Mantenimiento Preventivo y Correctivo de Computadoras. Sólidos fundamentos en hardware y diagnóstico de sistemas.",
         cert_meta_desc: "Certificación en Programación en Java. Conocimientos en desarrollo estructurado, Programación Orientada a Objetos y lógica de software empresarial.",
+        retro_title: "Modo retro 2010",
     },
     en: {
         meta_desc: "Cyberpunk personal portfolio of a systems engineering student.",
@@ -124,11 +141,11 @@ const translations = {
         nav_about: "About",
         nav_projects: "Projects",
         nav_contact: "Contact",
-        hero_role: "Developer & Systems Engineering Student (5/12 Semesters)",
+        hero_role: "Developer & Systems Engineering Student (6/12 Semesters)",
         hero_desc: "Building the digital future. Experience in freelance, web development, and creating interactive experiences.",
         hero_cta: "INITIATE SEQUENCE_",
         hero_cv: "DOWNLOAD CV_",
-        about_text1: "I am a 5th-semester (out of 12) Systems Engineering student. Passionate about technology, cyberpunk aesthetics, and building clean, efficient architectures.",
+        about_text1: "I am a 6th-semester (out of 12) Systems Engineering student. Passionate about technology, cyberpunk aesthetics, and building clean, efficient architectures.",
         about_text2: "I work freelance helping local small businesses digitize. I create unique portfolios, company websites, and have participated in algorithmic development for visual novel games.",
         proj_mevek_desc: "Commercial website for a local electronics store. Responsive and modern design for showcasing tech products.",
         proj_capi_desc: "Local AI assistant in development for university thesis. Architecture designed for efficient execution on local hardware.",
@@ -140,6 +157,7 @@ const translations = {
         cert_lfc102_desc: "The Linux Foundation. Inclusive orientation and collaboration methodologies in Open Source communities.",
         cert_cecati_desc: "Certification in Preventive and Corrective Computer Maintenance. Solid fundamentals in hardware and system diagnostics.",
         cert_meta_desc: "Certification in Java Programming. Knowledge in structured development, Object-Oriented Programming, and enterprise software logic.",
+        retro_title: "2010 retro mode",
     }
 };
 
@@ -200,6 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.lang = lang;
         if (metaDescription && dict.meta_desc) {
             metaDescription.setAttribute('content', dict.meta_desc);
+        }
+
+        // Retro toggle keeps its visible "★2010" label; only the
+        // tooltip / accessible name is localized.
+        const retroBtn = document.getElementById('retro-toggle');
+        if (retroBtn && dict.retro_title) {
+            retroBtn.title = dict.retro_title;
+            retroBtn.setAttribute('aria-label', dict.retro_title);
         }
     }
 
