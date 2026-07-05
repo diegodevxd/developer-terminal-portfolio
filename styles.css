@@ -20,6 +20,15 @@
     --neon-magenta: #f0f;
     --neon-yellow: #ff0;
     --text-color: #e0e0e0;
+    /* Glow / tint tokens – retro mode overrides these to recolor the whole site */
+    --glow-cyan-soft: rgba(0, 255, 255, 0.08);
+    --glow-cyan-mid: rgba(0, 255, 255, 0.15);
+    --glow-cyan-strong: rgba(0, 255, 255, 0.3);
+    --glow-magenta-strong: rgba(255, 0, 255, 0.3);
+    --glow-yellow-soft: rgba(255, 255, 0, 0.2);
+    --tint-cyan-border: rgba(0, 255, 255, 0.4);
+    --tint-cyan-bg: rgba(0, 255, 255, 0.04);
+    --tint-cyan-line: rgba(0, 255, 255, 0.12);
     /* Custom fonts first, Google Fonts as a safe fallback if a file fails */
     --font-heading: 'Aeroblade', 'Orbitron', sans-serif;
     --font-body: 'Aero', 'Rajdhani', sans-serif;
@@ -55,9 +64,10 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.10) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
     background-size: 100% 4px, 3px 100%;
     z-index: 9999;
+    opacity: 0.6;
     pointer-events: none;
 }
 
@@ -71,6 +81,21 @@ body {
     z-index: -1;
     opacity: 0.5;
     pointer-events: none;
+}
+
+/* Canvas for the Three.js floating-hardware background */
+#bg3d-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+#bg3d-canvas[hidden] {
+    display: none;
 }
 
 .grid-bg {
@@ -117,11 +142,9 @@ body {
 }
 
 .section {
-    padding: 100px 0;
-    min-height: 100vh;
+    padding: 110px 0 70px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 /* Typography */
@@ -164,14 +187,43 @@ h3 {
     left: 2px;
     text-shadow: -2px 0 var(--neon-magenta);
     clip: rect(24px, 550px, 90px, 0);
-    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    animation: glitch-anim-2 7s infinite linear alternate-reverse;
 }
 
 .glitch::after {
     left: -2px;
     text-shadow: -2px 0 var(--neon-cyan);
     clip: rect(85px, 550px, 140px, 0);
-    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+    animation: glitch-anim 6s infinite linear alternate-reverse;
+}
+
+/* Section titles & footer: static accent instead of constant glitching –
+   keeps the cyberpunk identity while the content stays calm and readable */
+.section-title.glitch::before,
+.footer h2.glitch::before {
+    animation: none;
+    background: transparent;
+    clip: rect(auto, auto, auto, auto);
+    left: 1px;
+    top: 1px;
+    color: var(--neon-magenta);
+    text-shadow: none;
+    opacity: 0.35;
+    z-index: -1;
+}
+
+.section-title.glitch::after,
+.footer h2.glitch::after {
+    animation: none;
+    content: '';
+    background: linear-gradient(90deg, var(--neon-cyan), transparent);
+    clip: rect(auto, auto, auto, auto);
+    text-shadow: none;
+    height: 2px;
+    width: 60%;
+    top: auto;
+    bottom: -12px;
+    left: 0;
 }
 
 @keyframes glitch-anim {
@@ -238,7 +290,7 @@ h3 {
     background: rgba(5, 5, 5, 0.9);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--neon-cyan);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.12);
+    box-shadow: 0 0 20px var(--glow-cyan-soft);
     z-index: 200;
 }
 
@@ -252,7 +304,7 @@ h3 {
 
 .logo span {
     color: var(--neon-cyan);
-    text-shadow: 0 0 14px var(--neon-cyan);
+    text-shadow: 0 0 8px var(--neon-cyan);
 }
 
 /* Nav right group (lang button + hamburger) */
@@ -317,7 +369,7 @@ h3 {
 
 .hamburger:hover {
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 8px var(--glow-cyan-strong);
 }
 
 .hamburger span {
@@ -392,6 +444,8 @@ body.no-scroll {
 .cyber-button.small {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .cyber-button::before {
@@ -459,7 +513,7 @@ body.no-scroll {
     left: 0;
     border-top: 2px solid var(--neon-cyan);
     border-left: 2px solid var(--neon-cyan);
-    box-shadow: -2px -2px 12px rgba(0, 255, 255, 0.5);
+    box-shadow: -2px -2px 12px var(--glow-cyan-strong);
 }
 
 .hero-corner.br {
@@ -467,7 +521,7 @@ body.no-scroll {
     right: 0;
     border-bottom: 2px solid var(--neon-magenta);
     border-right: 2px solid var(--neon-magenta);
-    box-shadow: 2px 2px 12px rgba(255, 0, 255, 0.5);
+    box-shadow: 2px 2px 12px var(--glow-magenta-strong);
 }
 
 .hero-content::before {
@@ -479,7 +533,7 @@ body.no-scroll {
     height: 28px;
     border-top: 2px solid var(--neon-cyan);
     border-right: 2px solid var(--neon-cyan);
-    box-shadow: 2px -2px 12px rgba(0, 255, 255, 0.5);
+    box-shadow: 2px -2px 12px var(--glow-cyan-strong);
     pointer-events: none;
 }
 
@@ -492,7 +546,7 @@ body.no-scroll {
     height: 28px;
     border-bottom: 2px solid var(--neon-magenta);
     border-left: 2px solid var(--neon-magenta);
-    box-shadow: -2px 2px 12px rgba(255, 0, 255, 0.5);
+    box-shadow: -2px 2px 12px var(--glow-magenta-strong);
     pointer-events: none;
 }
 
@@ -526,7 +580,7 @@ body.no-scroll {
     font-size: 1.2rem;
     max-width: 600px;
     margin: 0 auto 2.5rem auto;
-    line-height: 1.6;
+    line-height: 1.7;
     color: #c8c8c8;
 }
 
@@ -543,7 +597,7 @@ body.no-scroll {
     background: #0a0a0a;
     border: 1px solid #333;
     border-radius: 5px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px var(--glow-cyan-soft);
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
@@ -589,7 +643,7 @@ body.no-scroll {
     font-family: var(--font-mono);
     font-size: 1rem;
     color: #0f0;
-    line-height: 1.5;
+    line-height: 1.7;
 }
 
 .terminal-body p {
@@ -644,8 +698,8 @@ body.no-scroll {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: var(--neon-cyan);
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    background: rgba(0, 255, 255, 0.04);
+    border: 1px solid var(--tint-cyan-border);
+    background: var(--tint-cyan-bg);
     padding: 0.4rem 0.9rem;
     letter-spacing: 1px;
     transition: color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
@@ -654,7 +708,7 @@ body.no-scroll {
 .skill-badge:hover {
     color: var(--neon-yellow);
     border-color: var(--neon-yellow);
-    box-shadow: 0 0 12px rgba(255, 255, 0, 0.25);
+    box-shadow: 0 0 12px var(--glow-yellow-soft);
     transform: translateY(-3px);
 }
 
@@ -742,8 +796,8 @@ body.no-scroll {
 
 .cyber-card:hover {
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-    transform: translateY(-5px);
+    box-shadow: 0 0 15px var(--glow-cyan-mid);
+    transform: translateY(-3px);
 }
 
 .cyber-card:hover::before,
@@ -783,6 +837,13 @@ body.no-scroll {
     text-shadow: 0 0 8px var(--neon-magenta);
 }
 
+/* Keyboard focus – visible outline for links and buttons */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--neon-yellow);
+    outline-offset: 3px;
+}
+
 /* Footer & Contact */
 .footer {
     text-align: center;
@@ -795,6 +856,9 @@ body.no-scroll {
     font-size: 2.5rem;
     color: var(--neon-magenta);
     margin-bottom: 30px;
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .social-links {
@@ -851,8 +915,15 @@ body.no-scroll {
         opacity: 0.4;
     }
 
+    /* Sections already grow long from single-column stacking on mobile –
+       tighten the vertical padding tuned for desktop's wide rows */
+    .section {
+        padding: 70px 0 50px;
+    }
+
     .container {
-        padding: 0 1.2rem;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
     }
 
     /* --- Navbar row layout (no stacking) --- */
@@ -881,7 +952,7 @@ body.no-scroll {
         height: 100dvh;
         background: rgba(5, 5, 5, 0.97);
         border-left: 2px solid var(--neon-cyan);
-        box-shadow: -6px 0 40px rgba(0, 255, 255, 0.18);
+        box-shadow: -6px 0 40px var(--glow-cyan-mid);
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -902,7 +973,7 @@ body.no-scroll {
         margin: 0;
         padding: 0.9rem 0;
         width: 100%;
-        border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        border-bottom: 1px solid var(--tint-cyan-line);
         transition: color 0.2s ease, padding-left 0.2s ease;
         letter-spacing: 1px;
     }
@@ -920,11 +991,22 @@ body.no-scroll {
         display: none;
     }
 
-    /* Language button stays in nav-right row */
-    #lang-toggle {
-        font-size: 0.7rem;
-        padding: 0.4rem 0.8rem;
+    /* Language + retro buttons stay in nav-right row */
+    #lang-toggle,
+    #retro-toggle {
+        font-size: 0.65rem;
+        padding: 0.35rem 0.55rem;
         position: static;
+        border-width: 1px;
+    }
+
+    .nav-right {
+        gap: 0.5rem;
+    }
+
+    .logo {
+        white-space: nowrap;
+        margin-right: 0.5rem;
     }
 
     /* Hero tweaks */
@@ -994,6 +1076,28 @@ body.no-scroll {
 }
 
 @media (max-width: 480px) {
+    .navbar {
+        padding: 12px 12px;
+    }
+
+    .logo {
+        font-size: 0.95rem;
+    }
+
+    #lang-toggle,
+    #retro-toggle {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.45rem;
+    }
+
+    .nav-right {
+        gap: 0.4rem;
+    }
+
+    .hamburger {
+        padding: 6px 6px;
+    }
+
     .section-title {
         font-size: clamp(1.2rem, 5vw, 1.8rem);
         margin-bottom: 1.5rem;
@@ -1035,6 +1139,19 @@ body.no-scroll {
     .social-links .cyber-button {
         width: 100%;
         text-align: center;
+    }
+}
+
+/* Very narrow screens: collapse the logo to just "DIEGO" so the
+   nav buttons and hamburger always fit */
+@media (max-width: 360px) {
+    .logo {
+        font-size: 0;
+        margin-right: 0.25rem;
+    }
+
+    .logo span {
+        font-size: 0.9rem;
     }
 }
 

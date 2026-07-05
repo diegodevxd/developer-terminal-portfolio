@@ -36,7 +36,11 @@
     <!-- Favicon (inline SVG, sin archivos extra) -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%2300ffff' stroke-width='1.5'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' font-weight='bold' fill='%2300ffff'%3ED%3C/text%3E%3C/svg%3E">
 
+    <!-- Restore retro mode before first paint to avoid a flash of the normal theme -->
+    <script>try{if(localStorage.getItem('retro2010')==='1'){document.documentElement.classList.add('retro-mode');}}catch(e){}</script>
+
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="retro.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -46,6 +50,7 @@
 
 <body>
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <canvas id="bg3d-canvas" aria-hidden="true" hidden></canvas>
     <div class="scanlines" aria-hidden="true"></div>
     <div class="grid-bg" aria-hidden="true"></div>
 
@@ -58,6 +63,8 @@
             <a href="#contact" data-i18n="nav_contact">Contacto</a>
         </div>
         <div class="nav-right">
+            <button id="retro-toggle" class="cyber-button small" aria-pressed="false" title="Modo retro 2010"
+                aria-label="Modo retro 2010">★2010</button>
             <button id="lang-toggle" class="cyber-button small">EN / ES</button>
             <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
                 <span></span>
@@ -74,7 +81,7 @@
             <span class="hero-corner br"></span>
             <div class="hero-badge">// SYS.STATUS: ONLINE //</div>
             <h1 class="glitch" data-i18n="hero_title" data-text="HOLA, MUNDO //">HOLA, MUNDO //</h1>
-            <h2 class="subtitle" data-i18n="hero_role">Desarrollador & Estudiante de Ing. en Sistemas (5/12 Semestres)
+            <h2 class="subtitle" data-i18n="hero_role">Desarrollador & Estudiante de Ing. en Sistemas (6/12 Semestres)
             </h2>
             <p class="description" data-i18n="hero_desc">Construyendo el futuro digital. Experiencia en freelance,
                 desarrollo web y creación de experiencias interactivas.</p>
@@ -97,7 +104,7 @@
                 </div>
                 <div class="terminal-body">
                     <p><span class="prompt">user@sys_eng:~$</span> whoami</p>
-                    <p class="output" data-i18n="about_text1">Soy estudiante de 5to semestre (de 12) de Ingeniería en
+                    <p class="output" data-i18n="about_text1">Soy estudiante de 6to semestre (de 12) de Ingeniería en
                         Sistemas. Apasionado por la tecnología, la estética cyberpunk y la creación de arquitecturas
                         limpias y eficientes.</p>
                     <p><span class="prompt">user@sys_eng:~$</span> get_skills --tech</p>
@@ -238,10 +245,27 @@
             <a href="https://www.tiktok.com/@capihw" target="_blank" class="cyber-button">TIKTOK_</a>
             <a href="mailto:diegomancera.dev@gmail.com" class="cyber-button">EMAIL_</a>
         </div>
+        <!-- 88x31 web badges – only visible in retro 2010 mode -->
+        <div class="retro-badges" aria-hidden="true">
+            <span class="badge88">★ sc3n3 k1d ★</span>
+            <span class="badge88">● MSN online</span>
+            <span class="badge88">♪ house 24/7</span>
+            <span class="badge88">winamp 4ever</span>
+        </div>
         <p class="copyright">© 2026 SYS.ENG_DIEGO // TERMINAL OFFLINE</p>
     </footer>
 
+    <!-- Three.js resolved via import map so bg3d.js stays build-free -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.min.js"
+        }
+    }
+    </script>
     <script src="script.js"></script>
+    <script type="module" src="bg3d.js"></script>
+    <script src="retro.js" defer></script>
 </body>
 
 </html>
