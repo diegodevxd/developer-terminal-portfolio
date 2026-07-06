@@ -25,8 +25,8 @@ async function init() {
     // Reduced motion: no 3D and no rain – the static grid + scanlines remain.
     if (!canvas || reducedMotion) return;
 
-    // On small screens the rain is cheaper and already tuned for mobile.
-    if (isMobile || !supportsWebGL()) {
+    // No WebGL support at all: fall back to the cheap 2D rain.
+    if (!supportsWebGL()) {
         if (window.__startMatrixRain) window.__startMatrixRain();
         return;
     }
@@ -50,10 +50,10 @@ async function init() {
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         alpha: true,
-        antialias: true,
+        antialias: !isMobile,
         powerPreference: 'low-power'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const scene = new THREE.Scene();
@@ -216,15 +216,18 @@ async function init() {
     const world = new THREE.Group();
     scene.add(world);
 
-    const builders = [
-        createGPU, createGPU,
-        function () { return createRAM(false); },
-        function () { return createRAM(true); },
-        function () { return createRAM(false); },
-        createCPU, createCPU,
-        createChip, createChip, createChip, createChip,
-        createCaseFan, createCaseFan
-    ];
+    // Fewer pieces on phones: lighter draw-call count for weaker GPUs.
+    const builders = isMobile
+        ? [createGPU, function () { return createRAM(true); }, createCPU, createChip, createChip, createCaseFan]
+        : [
+            createGPU, createGPU,
+            function () { return createRAM(false); },
+            function () { return createRAM(true); },
+            function () { return createRAM(false); },
+            createCPU, createCPU,
+            createChip, createChip, createChip, createChip,
+            createCaseFan, createCaseFan
+        ];
 
     function randomPosition() {
         // Keep the zone right behind the hero copy clear.
