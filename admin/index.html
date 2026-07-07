@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Panel de Diego · Administración</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c6cf0'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='sans-serif' font-size='19' font-weight='bold' fill='white'%3ED%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ==================== LOGIN ==================== -->
+    <div class="login-wrap" id="login-view">
+        <div class="login-card clay">
+            <div class="logo">🔐</div>
+            <h1>Panel de Diego</h1>
+            <p class="sub">Acceso privado de administración</p>
+
+            <div class="msg" id="login-msg" hidden></div>
+
+            <div class="field">
+                <label>Correo</label>
+                <input type="email" id="login-email" autocomplete="email" placeholder="tu-correo@ejemplo.com">
+            </div>
+            <div class="field">
+                <label>Contraseña</label>
+                <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••">
+            </div>
+            <button class="btn" id="btn-entrar" style="width:100%">ENTRAR</button>
+
+            <p class="mini" id="whoami"></p>
+            <p class="mini"><a href="#" id="btn-salir-login" hidden>Cerrar sesión</a></p>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <div class="dash" id="dash-view">
+        <div class="topbar clay">
+            <div class="brand">
+                <div class="ic">📊</div>
+                <div>
+                    <h1>Panel de Diego</h1>
+                    <small>Servicios web · en tiempo real</small>
+                </div>
+            </div>
+            <div class="spacer"></div>
+            <span class="live-pill"><span class="dot"></span> EN VIVO</span>
+            <span class="who" id="who-email"></span>
+            <button class="btn ghost sm" id="btn-refrescar">↻ Actualizar</button>
+            <button class="btn ghost sm" id="btn-salir">Salir</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpis" id="kpis">
+            <div class="kpi hero clay">
+                <div class="ic">💰</div>
+                <div class="val" id="k-ingresos">$0</div>
+                <div class="lbl">Ingresos cobrados (anticipos)</div>
+            </div>
+            <div class="kpi clay">
+                <div class="ic">📈</div>
+                <div class="val" id="k-contratado">$0</div>
+                <div class="lbl">Valor total contratado</div>
+            </div>
+            <div class="kpi clay">
+                <div class="ic">⏳</div>
+                <div class="val" id="k-porcobrar">$0</div>
+                <div class="lbl">Por cobrar (resto)</div>
+            </div>
+            <div class="kpi clay">
+                <div class="ic">🤝</div>
+                <div class="val" id="k-clientes">0</div>
+                <div class="lbl">Clientes que pagaron</div>
+            </div>
+            <div class="kpi clay">
+                <div class="ic">📨</div>
+                <div class="val" id="k-leads">0</div>
+                <div class="lbl">Solicitudes (leads)</div>
+            </div>
+            <div class="kpi clay">
+                <div class="ic">🎯</div>
+                <div class="val" id="k-conversion">0%</div>
+                <div class="lbl">Tasa de conversión</div>
+            </div>
+        </div>
+
+        <!-- Gráficas -->
+        <div class="charts">
+            <div class="chart-card clay">
+                <h3>Ingresos por día</h3>
+                <div class="sub">Anticipos cobrados · últimos 14 días</div>
+                <div class="chart-box"><canvas id="chart-ingresos" height="220"></canvas></div>
+            </div>
+            <div class="chart-card clay">
+                <h3>Contrataciones por paquete</h3>
+                <div class="sub">Clientes que pagaron, por tipo</div>
+                <div class="chart-box"><canvas id="chart-paquetes" height="220"></canvas></div>
+                <div class="legend">
+                    <span><i style="background:#2a78d6"></i> Básico</span>
+                    <span><i style="background:#1baf7a"></i> Profesional</span>
+                    <span><i style="background:#eda100"></i> Premium</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad / clientes -->
+        <div class="activity clay">
+            <div class="head">
+                <h3>Clientes y solicitudes</h3>
+                <div class="spacer" style="flex:1"></div>
+                <div class="chips" id="chips">
+                    <button class="chip active" data-filter="todos">Todos</button>
+                    <button class="chip" data-filter="pagado_anticipo">Pagados</button>
+                    <button class="chip" data-filter="pendiente">Pendientes</button>
+                </div>
+            </div>
+            <div class="table-scroll">
+                <table class="act">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Paquete</th><th>Estado</th><th>Anticipo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="act-body"></tbody>
+                </table>
+            </div>
+            <div class="empty" id="act-empty" hidden>Aún no hay solicitudes. Cuando alguien contrate, aparecerá aquí al instante. ✨</div>
+        </div>
+    </div>
+
+    <div class="toasts" id="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+
+</html>
