@@ -7,6 +7,9 @@ admin/
 # Código fuente de los Edge Functions (ya viven desplegados en Supabase, no en Vercel).
 supabase/
 
+# Flyer para redes (herramienta interna, se captura en local; no se publica)
+servicios/flyer.html
+
 # Skills locales
 .agents/
 skills-lock.json
