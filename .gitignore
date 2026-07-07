@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (¡secretas!)
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# Skills instaladas localmente (taste-skill)
+.agents/
+skills-lock.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Duplicado accidental de fuentes
+fuentes/fuentes/
+
+# Cache del CLI de Supabase
+supabase/.temp/
+supabase/.branches/
