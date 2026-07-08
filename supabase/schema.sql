@@ -1,10 +1,18 @@
 -- =====================================================================
 --  schema.sql — Esquema de la base de datos (proyecto Supabase: serviciosweb)
---  Ya está APLICADO en el proyecto. Este archivo es la referencia versionada.
 --
---  Dos tablas:
+--  ⚠ PENDIENTE DE APLICAR: la columna `tipo_pago`, la tabla `suscripciones`
+--  y la columna `stripe_invoice_id` en `contrataciones` son NUEVAS (soporte
+--  de financiamiento en 3 pagos + plan Mantenimiento mensual) y todavía NO
+--  están en la base de datos real — hay que correr esos bloques (son
+--  `create table if not exists` / `alter table ... add column if not exists`,
+--  seguros de re-ejecutar) contra el proyecto de Supabase antes de desplegar
+--  las Edge Functions actualizadas. El resto del archivo ya está aplicado.
+--
+--  Tres tablas:
 --    solicitudes    → cada persona que llena el formulario (lead + estado de pago)
 --    contrataciones → ledger de pagos confirmados (alimentado por el webhook)
+--    suscripciones  → bookkeeping de pagos recurrentes (financiamiento/mantenimiento)
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -23,9 +31,21 @@ create table if not exists public.solicitudes (
     anticipo_mxn      integer,
     acepto_anticipo   boolean default false,
     acepto_terminos   boolean default false,
-    pago_estado       text default 'pendiente',   -- pendiente | pagado_anticipo
-    stripe_session_id text
+    pago_estado       text default 'pendiente',   -- pendiente | pagado_anticipo | activo_financiamiento | financiamiento_completado | activo_mantenimiento | cancelado
+    stripe_session_id text,
+    tipo_pago         text not null default 'unico'
+                        check (tipo_pago in ('unico','financiamiento','mantenimiento'))
 );
+
+-- La tabla ya existe en producción: `create table if not exists` de arriba
+-- no la toca, así que la columna nueva se agrega explícitamente aquí.
+alter table public.solicitudes
+    add column if not exists tipo_pago text not null default 'unico';
+alter table public.solicitudes
+    drop constraint if exists solicitudes_tipo_pago_check;
+alter table public.solicitudes
+    add constraint solicitudes_tipo_pago_check
+        check (tipo_pago in ('unico','financiamiento','mantenimiento'));
 
 create index if not exists idx_solicitudes_created_at on public.solicitudes (created_at desc);
 create index if not exists idx_solicitudes_user       on public.solicitudes (user_id);
@@ -56,8 +76,23 @@ create table if not exists public.contrataciones (
     stripe_session_id text unique,
     monto             integer,          -- monto en centavos, tal como lo da Stripe
     moneda            text default 'MXN',
-    estado            text default 'paid'
+    estado            text default 'paid',
+    stripe_invoice_id text unique       -- cobros recurrentes (financiamiento/mantenimiento); null en pagos únicos
 );
+
+-- Igual que en solicitudes: la tabla ya existe, así que la columna nueva
+-- se agrega explícitamente (el create table de arriba no la toca).
+alter table public.contrataciones
+    add column if not exists stripe_invoice_id text;
+do $$
+begin
+    if not exists (
+        select 1 from pg_constraint where conname = 'contrataciones_stripe_invoice_id_key'
+    ) then
+        alter table public.contrataciones
+            add constraint contrataciones_stripe_invoice_id_key unique (stripe_invoice_id);
+    end if;
+end $$;
 
 create index if not exists idx_contrataciones_created_at on public.contrataciones (created_at desc);
 create index if not exists idx_contrataciones_email       on public.contrataciones (cliente_email);
@@ -65,3 +100,36 @@ create index if not exists idx_contrataciones_email       on public.contratacion
 -- RLS activado sin políticas públicas: cerrada al público. Solo la
 -- service role (webhook) escribe; tú lees desde el dashboard de Supabase.
 alter table public.contrataciones enable row level security;
+
+-- ---------------------------------------------------------------------
+--  SUSCRIPCIONES (bookkeeping de pagos recurrentes: financiamiento en
+--  3 pagos y mantenimiento mensual indefinido). El webhook es el único
+--  que escribe aquí; el frontend solo puede leer sus propias filas.
+-- ---------------------------------------------------------------------
+create table if not exists public.suscripciones (
+    id                     uuid primary key default gen_random_uuid(),
+    created_at             timestamptz not null default now(),
+    solicitud_id           uuid references public.solicitudes(id) on delete set null,
+    user_id                uuid references auth.users(id) on delete set null,
+    tipo                   text not null check (tipo in ('financiamiento','mantenimiento')),
+    stripe_customer_id     text,
+    stripe_subscription_id text unique,
+    monto_mensual_mxn      integer not null,
+    moneda                 text default 'MXN',
+    ciclos_pagados         integer not null default 0,
+    ciclos_totales         integer,        -- null = indefinida (mantenimiento); 3 = financiamiento
+    estado                 text not null default 'activa'
+                             check (estado in ('activa','completada','cancelada','pago_fallido')),
+    fecha_cancelacion      timestamptz
+);
+
+create index if not exists idx_suscripciones_user   on public.suscripciones (user_id);
+create index if not exists idx_suscripciones_stripe on public.suscripciones (stripe_subscription_id);
+
+alter table public.suscripciones enable row level security;
+
+-- El cliente solo puede LEER sus propias suscripciones; insert/update
+-- son exclusivos del webhook (service role), nunca del navegador.
+create policy "suscripcion_select_propia"
+    on public.suscripciones for select to authenticated
+    using (auth.uid() = user_id);

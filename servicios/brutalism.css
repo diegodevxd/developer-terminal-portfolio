@@ -303,6 +303,17 @@ section { border-bottom: var(--border-w) solid var(--border); padding: 64px 0; }
 .pkg-price .now { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3rem); line-height:1; color: var(--ink); }
 .pkg-price .now small { font-size: 1rem; color: var(--cyan); font-family: var(--font-mono); }
 .pkg-price .unit { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-top:6px; }
+.pkg-price .alt-pago {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--cyan);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255,255,255,0.15);
+}
+.pkg-price .alt-pago b { color: var(--cyan); }
+
+.mantenimiento-wrap { max-width: 420px; margin: 0 auto; }
 
 .pkg-feats { padding: 20px 22px; flex: 1; }
 .pkg-feats li { list-style: none; display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.12); font-size: 0.94rem; }
@@ -440,14 +451,57 @@ footer.foot { border-bottom: none; padding: 40px 0 60px; }
 .foot .copy { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-dim); text-transform: uppercase; }
 
 /* ==================================================================
+   SCROLL REVEAL (animaciones de entrada)
+   ================================================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Stagger simple: la 2a y 3a tarjeta de cada grid aparecen un poco después */
+.proof-card.reveal:nth-child(2),
+.pkg.reveal:nth-child(2),
+.why-card.reveal:nth-child(2),
+.stat.reveal:nth-child(2) { transition-delay: 0.08s; }
+
+.proof-card.reveal:nth-child(3),
+.pkg.reveal:nth-child(3),
+.why-card.reveal:nth-child(3),
+.stat.reveal:nth-child(3) { transition-delay: 0.16s; }
+
+.why-card.reveal:nth-child(4) { transition-delay: 0.24s; }
+
+.pricing-dots { display: none; justify-content: center; gap: 8px; margin-top: 2px; }
+.pricing-dots .dot { width: 8px; height: 8px; border: 2px solid var(--ink-dim); background: transparent; padding: 0; }
+.pricing-dots .dot.active { background: var(--cyan); border-color: var(--cyan); }
+
+/* ==================================================================
    RESPONSIVE
    ================================================================== */
 @media (max-width: 900px) {
-    .pricing-grid { grid-template-columns: 1fr; gap: 30px; }
+    /* Paquetes en móvil: carrusel horizontal con snap en vez de columna
+       apilada — las 3 tarjetas son largas y ocupaban mucho scroll. */
+    .pricing-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 20px;
+        padding: 4px 4px 14px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .pricing-grid::-webkit-scrollbar { display: none; }
+    .pricing-grid .pkg { flex: 0 0 88%; scroll-snap-align: center; }
     .pkg.featured { transform: none; }
+
+    .pricing-dots { display: flex; }
+
     .guarantee { grid-template-columns: 1fr; text-align: center; }
     .guarantee .seal { margin: 0 auto; }
 }
+
 @media (max-width: 560px) {
     body { font-size: 17px; }
     .hero h1 { text-shadow: 3px 3px 0 var(--magenta), 6px 6px 0 rgba(0,255,255,0.35); }
@@ -528,6 +582,22 @@ footer.foot { border-bottom: none; padding: 40px 0 60px; }
 .fld input:focus, .fld textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 4px 4px 0 var(--cyan); }
 .fld textarea { resize: vertical; }
 
+.pago-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+.pago-toggle .toggle-opt {
+    flex: 1;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    padding: 10px 8px;
+    background: var(--panel);
+    color: var(--ink-dim);
+    border: var(--border-w) solid var(--border);
+    cursor: pointer;
+}
+.pago-toggle .toggle-opt.active { background: var(--cyan); color: #000; }
+
 .anticipo-box { border: var(--border-w) solid var(--border); background: var(--panel); padding: 14px 16px; margin: 4px 0 18px; }
 .anticipo-box .mono { color: var(--yellow); margin-bottom: 8px; }
 .anticipo-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.92rem; border-bottom: 1px dashed rgba(255,255,255,0.12); }
@@ -554,4 +624,5 @@ footer.foot { border-bottom: none; padding: 40px 0 60px; }
 
 @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
 }
