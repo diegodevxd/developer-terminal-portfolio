@@ -144,6 +144,7 @@
                         <div class="anchor">Valor real ~$4,500</div>
                         <div class="now">$2,500 <small>MXN</small></div>
                         <div class="unit">50% para iniciar ($1,250) · 50% al entregar · ~3-5 días</div>
+                        <div class="alt-pago">o en <b>3 pagos de $834</b>/mes sin intereses</div>
                     </div>
                     <ul class="pkg-feats">
                         <li class="benefit">Deja de perder clientes por no tener presencia web</li>
@@ -172,6 +173,7 @@
                         <div class="anchor">Valor real ~$9,000</div>
                         <div class="now">$5,000 <small>MXN</small></div>
                         <div class="unit">50% para iniciar ($2,500) · 50% al entregar · ~5-7 días</div>
+                        <div class="alt-pago">o en <b>3 pagos de $1,667</b>/mes sin intereses</div>
                     </div>
                     <ul class="pkg-feats">
                         <li class="benefit">Convierte visitas en clientes con una web completa</li>
@@ -200,6 +202,7 @@
                         <div class="anchor">Valor real ~$22,000</div>
                         <div class="now">$12,000 <small>MXN</small></div>
                         <div class="unit">50% para iniciar ($6,000) · 50% al entregar*</div>
+                        <div class="alt-pago">o en <b>3 pagos de $4,000</b>/mes sin intereses</div>
                     </div>
                     <ul class="pkg-feats">
                         <li class="benefit">Cobra 24/7 con tarjeta, aunque estés durmiendo</li>
@@ -217,6 +220,12 @@
                     </div>
                 </article>
 
+            </div>
+
+            <div class="pricing-dots" aria-hidden="true">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
             </div>
 
             <!-- AVISO GENERAL: dominio y hosting -->
@@ -281,6 +290,40 @@
                         <tr><th>Soporte post-entrega</th><td>—</td><td>7 días</td><td class="yes">30 días</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MANTENIMIENTO MENSUAL ==================== -->
+    <section id="mantenimiento">
+        <div class="wrap">
+            <div class="section-head">
+                <span class="kicker">[ SOPORTE CONTINUO // INGRESO RECURRENTE ]</span>
+                <h2>PLAN <em>MANTENIMIENTO</em></h2>
+                <p class="mono" style="margin-top:12px">/// PARA SITIOS YA EN LÍNEA (míos o de terceros) · CANCELA CUANDO QUIERAS ///</p>
+            </div>
+            <div class="mantenimiento-wrap">
+                <article class="pkg">
+                    <div class="pkg-head">
+                        <span class="id">UNIT / D-04</span>
+                        <h3>Mantenimiento</h3>
+                        <span class="for">Tu sitio cuidado todo el mes, sin que muevas un dedo.</span>
+                    </div>
+                    <div class="pkg-price">
+                        <div class="now">$450 <small>MXN/MES</small></div>
+                        <div class="unit">Sin permanencia forzosa · cobro automático mensual</div>
+                    </div>
+                    <ul class="pkg-feats">
+                        <li class="benefit">Tu sitio nunca se cae ni se ve abandonado</li>
+                        <li>Hosting y dominio monitoreados</li>
+                        <li>Hasta 2 cambios de contenido al mes (textos, precios, fotos)</li>
+                        <li>Respaldo de seguridad mensual</li>
+                        <li>Soporte prioritario por WhatsApp</li>
+                    </ul>
+                    <div class="pkg-cta">
+                        <a href="#mantenimiento" class="btn ghost block" data-plan="mantenimiento">CONTRATAR MANTENIMIENTO_</a>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -436,10 +479,15 @@
                         <textarea id="f-desc" rows="3" placeholder="Cuéntame breve: tipo de negocio y qué quieres lograr con tu web."></textarea>
                     </label>
 
+                    <div class="pago-toggle" id="pago-toggle">
+                        <button type="button" class="toggle-opt active" data-tipo="unico">50% AHORA</button>
+                        <button type="button" class="toggle-opt" data-tipo="financiamiento">3 PAGOS/MES</button>
+                    </div>
+
                     <div class="anticipo-box" id="anticipo-box"></div>
 
                     <label class="check"><input type="checkbox" id="f-anticipo">
-                        <span>Acepto pagar el <b id="anticipo-lbl"></b> de <b>anticipo (50%)</b> para iniciar, y entiendo que es un depósito de compromiso <b>no reembolsable una vez que empieza el desarrollo</b>.</span></label>
+                        <span id="anticipo-check-lbl">Acepto pagar el <b id="anticipo-lbl"></b> de <b>anticipo (50%)</b> para iniciar, y entiendo que es un depósito de compromiso <b>no reembolsable una vez que empieza el desarrollo</b>.</span></label>
                     <label class="check"><input type="checkbox" id="f-terminos">
                         <span>He leído y acepto los <a href="terminos.html" target="_blank" rel="noopener">términos y condiciones</a>.</span></label>
 

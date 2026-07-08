@@ -18,10 +18,22 @@ const PAQUETES = {
   premium:     { nombre: "Premium",     total: 12000, anticipo: 6000 },
 };
 
+// Financiamiento: 3 mensualidades iguales por paquete (mismo total, sin costo extra).
+// Estos montos deben coincidir con FINANCIAMIENTO en supabase/functions/crear-checkout.
+const FINANCIAMIENTO = {
+  basico:      { cuota: 834,  ciclos: 3 },
+  profesional: { cuota: 1667, ciclos: 3 },
+  premium:     { cuota: 4000, ciclos: 3 },
+};
+
+// Mantenimiento: suscripción mensual indefinida, aparte de los paquetes.
+const MANTENIMIENTO = { nombre: "Mantenimiento", mensual: 450 };
+
 const mxn = (n) => "$" + n.toLocaleString("es-MX") + " MXN";
 const $ = (id) => document.getElementById(id);
 
 let planActual = null;
+let tipoPagoActual = "unico"; // "unico" | "financiamiento" | "mantenimiento"
 
 // ---------- helpers de UI ----------
 function showStep(step) {
@@ -46,17 +58,57 @@ function setBusy(busy) {
   document.querySelectorAll("#checkout-modal button").forEach((b) => (b.disabled = busy));
 }
 
-function openModal(key) {
-  planActual = key;
-  const p = PAQUETES[key];
+function renderResumen() {
+  const toggle = $("pago-toggle");
+  const descField = $("f-desc");
+
+  if (planActual === "mantenimiento") {
+    if (toggle) toggle.style.display = "none";
+    $("modal-title").textContent = "Mantenimiento mensual";
+    $("anticipo-box").innerHTML =
+      `<div class="mono">RESUMEN</div>` +
+      `<div class="anticipo-row hl"><span>Suscripción mensual</span><b>${mxn(MANTENIMIENTO.mensual)}/mes</b></div>` +
+      `<div class="anticipo-row"><span>Permanencia</span><b>Ninguna</b></div>`;
+    $("anticipo-check-lbl").innerHTML =
+      `Acepto la <b>suscripción mensual de ${mxn(MANTENIMIENTO.mensual)}</b> (cargo automático) y entiendo que puedo cancelarla cuando quiera.`;
+    if (descField) descField.placeholder = "¿Qué sitio quieres que mantengamos? (URL o notas)";
+    return;
+  }
+
+  if (toggle) toggle.style.display = "";
+  const p = PAQUETES[planActual];
   if (!p) return;
   $("modal-title").textContent = "Paquete " + p.nombre;
-  $("anticipo-lbl").textContent = mxn(p.anticipo);
-  $("anticipo-box").innerHTML =
-    `<div class="mono">RESUMEN</div>` +
-    `<div class="anticipo-row"><span>Paquete ${p.nombre}</span><b>${mxn(p.total)}</b></div>` +
-    `<div class="anticipo-row hl"><span>Anticipo hoy (50%)</span><b>${mxn(p.anticipo)}</b></div>` +
-    `<div class="anticipo-row"><span>Resto al entregar</span><b>${mxn(p.total - p.anticipo)}</b></div>`;
+  if (descField) descField.placeholder = "Cuéntame breve: tipo de negocio y qué quieres lograr con tu web.";
+
+  if (tipoPagoActual === "financiamiento") {
+    const fin = FINANCIAMIENTO[planActual];
+    $("anticipo-box").innerHTML =
+      `<div class="mono">RESUMEN</div>` +
+      `<div class="anticipo-row"><span>Paquete ${p.nombre}</span><b>${mxn(p.total)}</b></div>` +
+      `<div class="anticipo-row hl"><span>${fin.ciclos} pagos mensuales</span><b>${mxn(fin.cuota)}/mes</b></div>` +
+      `<div class="anticipo-row"><span>Cargo</span><b>Automático a tu tarjeta</b></div>`;
+    $("anticipo-check-lbl").innerHTML =
+      `Acepto pagar <b>${mxn(fin.cuota)} mensuales durante ${fin.ciclos} meses</b> (cargo automático a mi tarjeta) para cubrir el total del paquete.`;
+  } else {
+    $("anticipo-lbl").textContent = mxn(p.anticipo);
+    $("anticipo-box").innerHTML =
+      `<div class="mono">RESUMEN</div>` +
+      `<div class="anticipo-row"><span>Paquete ${p.nombre}</span><b>${mxn(p.total)}</b></div>` +
+      `<div class="anticipo-row hl"><span>Anticipo hoy (50%)</span><b>${mxn(p.anticipo)}</b></div>` +
+      `<div class="anticipo-row"><span>Resto al entregar</span><b>${mxn(p.total - p.anticipo)}</b></div>`;
+    $("anticipo-check-lbl").innerHTML =
+      `Acepto pagar el <b>${mxn(p.anticipo)}</b> de <b>anticipo (50%)</b> para iniciar, y entiendo que es un depósito de compromiso <b>no reembolsable una vez que empieza el desarrollo</b>.`;
+  }
+}
+
+function openModal(key) {
+  planActual = key;
+  tipoPagoActual = "unico";
+  document.querySelectorAll("#pago-toggle .toggle-opt").forEach((b) => {
+    b.classList.toggle("active", b.dataset.tipo === "unico");
+  });
+  renderResumen();
   showError("");
   $("checkout-modal").hidden = false;
   document.body.style.overflow = "hidden";
@@ -119,14 +171,15 @@ async function logout() {
 // ---------- crear solicitud + ir a pago ----------
 async function continuarAPago() {
   showError("");
-  const p = PAQUETES[planActual];
+  const esMantenimiento = planActual === "mantenimiento";
+  const p = esMantenimiento ? null : PAQUETES[planActual];
   const nombre = $("f-nombre").value.trim();
   const telefono = $("f-tel").value.trim();
   const descripcion = $("f-desc").value.trim();
   if (!nombre) return showError("Escribe tu nombre.");
   if (!telefono) return showError("Escribe tu teléfono o WhatsApp.");
   if (!descripcion) return showError("Cuéntame brevemente qué necesitas.");
-  if (!$("f-anticipo").checked) return showError("Debes aceptar el pago del anticipo del 50%.");
+  if (!$("f-anticipo").checked) return showError("Debes aceptar la condición de pago.");
   if (!$("f-terminos").checked) return showError("Debes aceptar los términos y condiciones.");
 
   const { data: { user } } = await sb.auth.getUser();
@@ -134,6 +187,8 @@ async function continuarAPago() {
 
   setBusy(true);
   showStep("loading");
+
+  const tipoPago = esMantenimiento ? "mantenimiento" : tipoPagoActual;
 
   // 1) Guardar la solicitud (RLS: solo puede crear la suya).
   const { data: sol, error: insErr } = await sb.from("solicitudes").insert({
@@ -143,8 +198,9 @@ async function continuarAPago() {
     telefono,
     descripcion,
     paquete: planActual,
-    precio_total_mxn: p.total,
-    anticipo_mxn: p.anticipo,
+    tipo_pago: tipoPago,
+    precio_total_mxn: p ? p.total : null,
+    anticipo_mxn: p ? p.anticipo : null,
     acepto_anticipo: true,
     acepto_terminos: true,
   }).select("id").single();
@@ -156,7 +212,7 @@ async function continuarAPago() {
 
   // 2) Crear la sesión de pago (Edge Function protegido por JWT).
   const { data: fnData, error: fnErr } = await sb.functions.invoke("crear-checkout", {
-    body: { solicitudId: sol.id, origin: window.location.origin },
+    body: { solicitudId: sol.id, origin: window.location.origin, tipoPago },
   });
 
   if (fnErr || !fnData?.url) {
@@ -194,6 +250,16 @@ function init() {
   $("btn-signup")?.addEventListener("click", signup);
   $("btn-logout")?.addEventListener("click", (e) => { e.preventDefault(); logout(); });
   $("btn-pagar")?.addEventListener("click", continuarAPago);
+
+  document.querySelectorAll("#pago-toggle .toggle-opt").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tipoPagoActual = btn.dataset.tipo;
+      document.querySelectorAll("#pago-toggle .toggle-opt").forEach((b) => {
+        b.classList.toggle("active", b === btn);
+      });
+      renderResumen();
+    });
+  });
 }
 
 if (document.readyState === "loading") {

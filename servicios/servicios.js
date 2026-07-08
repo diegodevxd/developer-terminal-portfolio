@@ -40,4 +40,45 @@ const EMAIL_CONTACTO  = "diegomancera.dev@gmail.com";
             }
         });
     }
+
+    // ---- Animaciones de entrada al hacer scroll ----
+    var revealTargets = document.querySelectorAll(
+        ".proof-card, .pkg, .why-card, .stat, .faq-item, .section-head, .guarantee, .notice"
+    );
+    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        revealTargets.forEach(function (el) { el.classList.add("visible"); });
+    } else {
+        revealTargets.forEach(function (el) { el.classList.add("reveal"); });
+        var revealObserver = new IntersectionObserver(function (entries, obs) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        revealTargets.forEach(function (el) { revealObserver.observe(el); });
+    }
+
+    // ---- Carrusel de precios en móvil (scroll-snap nativo + puntos) ----
+    var pricingGrid = document.querySelector(".pricing-grid");
+    var dots = document.querySelectorAll(".pricing-dots .dot");
+    if (pricingGrid && dots.length) {
+        var ticking = false;
+        pricingGrid.addEventListener("scroll", function () {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                var card = pricingGrid.children[0];
+                if (card) {
+                    var step = card.getBoundingClientRect().width + 20;
+                    var idx = Math.round(pricingGrid.scrollLeft / step);
+                    dots.forEach(function (d, i) { d.classList.toggle("active", i === idx); });
+                }
+                ticking = false;
+            });
+        }, { passive: true });
+    }
 })();
