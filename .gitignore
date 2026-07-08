@@ -13,6 +13,10 @@ node_modules/
 .agents/
 skills-lock.json
 
+# Panel de administración: vive en su propio repo privado
+# (github.com/diegodevxd/panel-admin-servicios), no en el del portafolio.
+admin/
+
 # Sistema
 .DS_Store
 Thumbs.db
