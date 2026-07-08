@@ -1,9 +1,5 @@
 # Archivos que NO se publican en Vercel (pero sí quedan en el repo)
 
-# Panel de administración: contiene datos de clientes → privado, se corre en local.
-# Si algún día quieres publicarlo (está protegido por login), borra esta línea.
-admin/
-
 # Código fuente de los Edge Functions (ya viven desplegados en Supabase, no en Vercel).
 supabase/
 
