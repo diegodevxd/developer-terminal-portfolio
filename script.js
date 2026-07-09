@@ -291,4 +291,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sections.forEach(section => navObserver.observe(section));
     }
+
+    // ---- Scroll-linked 3D tilt (terminal window in #about) ----
+    // Vanilla recreation of a scroll-driven card reveal: as the stage
+    // passes through the viewport, the card rotates from tilted-back to
+    // flat and scales up, like a screen powering into view.
+    const tiltStage = document.querySelector('.scroll-tilt-stage');
+    const tiltCard = document.querySelector('.scroll-tilt-card');
+
+    if (tiltStage && tiltCard && !prefersReducedMotion) {
+        const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+        let ticking = false;
+
+        function updateTilt() {
+            ticking = false;
+            const rect = tiltStage.getBoundingClientRect();
+            const vh = window.innerHeight;
+            const total = rect.height + vh;
+            const progress = clamp((vh - rect.top) / total, 0, 1);
+
+            const rotate = 14 - progress * 14;    // 14deg -> 0deg
+            const scale = 0.94 + progress * 0.06; // 0.94 -> 1
+
+            tiltCard.style.setProperty('--tilt-rotate', rotate + 'deg');
+            tiltCard.style.setProperty('--tilt-scale', scale);
+        }
+
+        function onTiltScroll() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(updateTilt);
+            }
+        }
+
+        window.addEventListener('scroll', onTiltScroll, { passive: true });
+        window.addEventListener('resize', onTiltScroll, { passive: true });
+        updateTilt();
+    }
 });

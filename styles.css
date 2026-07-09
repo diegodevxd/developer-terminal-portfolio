@@ -690,6 +690,21 @@ body.no-scroll {
     flex-wrap: wrap;
 }
 
+/* Scroll-linked 3D tilt on the terminal window – vanilla recreation of a
+   scroll-driven card reveal. .scroll-tilt-stage holds the perspective;
+   .scroll-tilt-card gets the rotate/scale so the terminal-window's own
+   .reveal/.visible transform (fade + slide) stays on its own element and
+   never fights this one for the `transform` property. */
+.scroll-tilt-stage {
+    perspective: 1200px;
+}
+
+.scroll-tilt-card {
+    transform: rotateX(var(--tilt-rotate, 14deg)) scale(var(--tilt-scale, 0.94));
+    transform-origin: center top;
+    will-change: transform;
+}
+
 /* Terminal / About Section */
 .terminal-window {
     background: #0a0a0a;
@@ -1275,6 +1290,10 @@ button:focus-visible {
 
     .reveal {
         opacity: 1;
+        transform: none;
+    }
+
+    .scroll-tilt-card {
         transform: none;
     }
 }
