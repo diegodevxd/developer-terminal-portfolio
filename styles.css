@@ -1191,10 +1191,12 @@ button:focus-visible {
         overflow-x: auto;
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
-        scroll-padding-left: 9%;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        padding-bottom: 4px;
+        /* Side padding matches half the leftover space around an 88%-wide
+           card (100% - 88% = 12%, split 6%/6%) so the first and last
+           cards can scroll-snap fully centered too, not just the middle ones. */
+        padding: 0 6% 4px;
     }
 
     .projects-grid::-webkit-scrollbar {
@@ -1202,9 +1204,16 @@ button:focus-visible {
     }
 
     .projects-grid .cyber-card {
-        flex: 0 0 82%;
+        flex: 0 0 88%;
         max-width: 340px;
+        min-width: 0;
+        padding: 22px;
         scroll-snap-align: center;
+    }
+
+    .projects-grid .card-content h3 {
+        font-size: 1rem;
+        overflow-wrap: break-word;
     }
 
     .carousel-arrow {
