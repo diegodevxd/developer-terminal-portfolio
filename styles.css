@@ -945,6 +945,21 @@ body.no-scroll {
     transition: 0.3s;
 }
 
+/* Carousel (Proyectos / Certificaciones) – on desktop this is just a
+   plain wrapper around the grid; the arrows/dots only activate below
+   the 768px breakpoint, see the media query further down. */
+.carousel {
+    position: relative;
+}
+
+.carousel-arrow {
+    display: none;
+}
+
+.carousel-dots {
+    display: none;
+}
+
 .cyber-link:hover {
     color: var(--neon-magenta);
     text-shadow: 0 0 8px var(--neon-magenta);
@@ -1168,9 +1183,89 @@ button:focus-visible {
         padding: 15px;
     }
 
-    /* Cards */
+    /* Cards – horizontal scroll-snap carousel instead of a vertical stack,
+       so 6-7 project/certification cards don't turn the page into a wall
+       of scrolling. Desktop keeps the grid untouched. */
     .projects-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 9%;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+
+    .projects-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .projects-grid .cyber-card {
+        flex: 0 0 82%;
+        max-width: 340px;
+        scroll-snap-align: center;
+    }
+
+    .carousel-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        background: rgba(5, 5, 5, 0.85);
+        border: 1px solid var(--tint-cyan-border);
+        color: var(--neon-cyan);
+        font-family: var(--font-mono);
+        font-size: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 5;
+        transition: 0.25s;
+    }
+
+    .carousel-arrow.prev {
+        left: 2px;
+    }
+
+    .carousel-arrow.next {
+        right: 2px;
+    }
+
+    .carousel-arrow:hover:not(:disabled) {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 12px var(--glow-cyan-mid);
+    }
+
+    .carousel-arrow:disabled {
+        opacity: 0.3;
+        cursor: default;
+    }
+
+    .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .carousel-dot {
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        background: transparent;
+        border: 1px solid var(--tint-cyan-border);
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .carousel-dot.active {
+        background: var(--neon-cyan);
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 8px var(--glow-cyan-mid);
     }
 
     /* Footer */

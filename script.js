@@ -134,6 +134,8 @@ const translations = {
         cert_cecati_desc: "Certificación en Mantenimiento Preventivo y Correctivo de Computadoras. Sólidos fundamentos en hardware y diagnóstico de sistemas.",
         cert_meta_desc: "Certificación en Programación en Java. Conocimientos en desarrollo estructurado, Programación Orientada a Objetos y lógica de software empresarial.",
         retro_title: "Modo retro 2010",
+        carousel_prev: "Anterior",
+        carousel_next: "Siguiente",
     },
     en: {
         meta_desc: "Cyberpunk personal portfolio of a systems engineering student.",
@@ -166,6 +168,8 @@ const translations = {
         cert_cecati_desc: "Certification in Preventive and Corrective Computer Maintenance. Solid fundamentals in hardware and system diagnostics.",
         cert_meta_desc: "Certification in Java Programming. Knowledge in structured development, Object-Oriented Programming, and enterprise software logic.",
         retro_title: "2010 retro mode",
+        carousel_prev: "Previous",
+        carousel_next: "Next",
     }
 };
 
@@ -221,6 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (element.classList.contains('glitch')) {
                 element.setAttribute('data-text', value);
             }
+        });
+
+        document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+            const key = element.getAttribute('data-i18n-aria');
+            const value = dict[key];
+            if (value !== undefined) element.setAttribute('aria-label', value);
         });
 
         document.documentElement.lang = lang;
@@ -332,4 +342,73 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', onTiltScroll, { passive: true });
         updateTilt();
     }
+
+    // ---- Mobile carousel (Proyectos / Certificaciones) ----
+    // On desktop this markup renders as the normal grid (CSS-only); below
+    // the 768px breakpoint .projects-grid becomes a scroll-snap row and
+    // this wires the arrows + dots to it.
+    document.querySelectorAll('.carousel').forEach(carousel => {
+        const track = carousel.querySelector('[data-carousel-track]');
+        const prevBtn = carousel.querySelector('[data-carousel-prev]');
+        const nextBtn = carousel.querySelector('[data-carousel-next]');
+        const dotsWrap = carousel.parentElement.querySelector('[data-carousel-dots]');
+        if (!track || !dotsWrap) return;
+
+        const cards = Array.from(track.children);
+        if (!cards.length) return;
+
+        dotsWrap.innerHTML = '';
+        const dots = cards.map((_, i) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'carousel-dot';
+            dot.setAttribute('aria-label', (i + 1) + ' / ' + cards.length);
+            dot.addEventListener('click', () => goTo(i));
+            dotsWrap.appendChild(dot);
+            return dot;
+        });
+
+        function cardStep() {
+            const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '0') || 0;
+            return cards[0].getBoundingClientRect().width + gap;
+        }
+
+        function currentIndex() {
+            return Math.round(track.scrollLeft / cardStep());
+        }
+
+        function goTo(index) {
+            const clamped = Math.max(0, Math.min(cards.length - 1, index));
+            cards[clamped].scrollIntoView({
+                behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                inline: 'center',
+                block: 'nearest',
+            });
+        }
+
+        function refreshUI() {
+            const idx = Math.max(0, Math.min(cards.length - 1, currentIndex()));
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            if (prevBtn) prevBtn.disabled = idx === 0;
+            if (nextBtn) nextBtn.disabled = idx === cards.length - 1;
+        }
+
+        prevBtn && prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+        nextBtn && nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+
+        track.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { e.preventDefault(); goTo(currentIndex() + 1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(currentIndex() - 1); }
+        });
+
+        let ticking = false;
+        track.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => { refreshUI(); ticking = false; });
+        });
+
+        window.addEventListener('resize', refreshUI);
+        refreshUI();
+    });
 });
