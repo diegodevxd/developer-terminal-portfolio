@@ -141,7 +141,9 @@
 
     <section id="projects" class="section container">
         <h2 class="section-title glitch" data-i18n="title_projects" data-text=">BASE_DE_DATOS_PROYECTOS_">>BASE_DE_DATOS_PROYECTOS_</h2>
-        <div class="projects-grid">
+        <div class="carousel">
+        <button type="button" class="carousel-arrow prev" data-carousel-prev aria-label="Anterior" data-i18n-aria="carousel_prev">‹</button>
+        <div class="projects-grid" data-carousel-track tabindex="0" role="region" aria-label="Proyectos" data-i18n-aria="nav_projects">
 
             <div class="cyber-card">
                 <div class="card-lines"></div>
@@ -228,11 +230,16 @@
             </div>
 
         </div>
+        <button type="button" class="carousel-arrow next" data-carousel-next aria-label="Siguiente" data-i18n-aria="carousel_next">›</button>
+        </div>
+        <div class="carousel-dots" data-carousel-dots aria-hidden="true"></div>
     </section>
 
    <section id="certifications" class="section container">
         <h2 class="section-title glitch" data-i18n="title_certifications" data-text=">CERTIFICACIONES_">>CERTIFICACIONES_</h2>
-        <div class="projects-grid">
+        <div class="carousel">
+        <button type="button" class="carousel-arrow prev" data-carousel-prev aria-label="Anterior" data-i18n-aria="carousel_prev">‹</button>
+        <div class="projects-grid" data-carousel-track tabindex="0" role="region" aria-label="Certificaciones" data-i18n-aria="nav_certifications">
 
             <div class="cyber-card">
                 <div class="card-lines"></div>
@@ -277,6 +284,9 @@
             </div>
 
         </div>
+        <button type="button" class="carousel-arrow next" data-carousel-next aria-label="Siguiente" data-i18n-aria="carousel_next">›</button>
+        </div>
+        <div class="carousel-dots" data-carousel-dots aria-hidden="true"></div>
     </section>
 
     <footer id="contact" class="footer container">
