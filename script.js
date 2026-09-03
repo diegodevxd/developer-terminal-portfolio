@@ -173,6 +173,39 @@ const translations = {
     }
 };
 
+// Current CV content. Kept separate from the UI implementation so ES/EN stay in sync.
+Object.assign(translations.es, {
+    meta_desc: "Portafolio de Diego Fernando Mancera Gómez, desarrollador full-stack y contribuidor del Linux Kernel.",
+    hero_role: "Desarrollador de Software · Full-Stack · Contribuidor Open Source (Linux Kernel)",
+    hero_desc: "Dos fixes de seguridad de memoria integrados al árbol mainline de Linus Torvalds. Desarrollo full-stack, Linux y CI/CD desde León, Guanajuato.",
+    about_text1: "Estudiante de Ingeniería en Sistemas Computacionales (7.º cuatrimestre) con experiencia práctica en desarrollo full-stack, Linux y CI/CD. Tengo dos fixes de C mergeados al árbol mainline de Linus Torvalds, enfocados en seguridad de memoria.",
+    about_text2: "En CapiHw Labs he desarrollado 10+ sitios y soluciones web, integrando Supabase, Stripe y flujos de CI/CD. También desarrollo proyectos open source como Cuentivo y PDF Crop Studio.",
+    proj_cherrycode_desc: "CapiHw Labs: desarrollador web y de soluciones técnicas desde 2023. He construido 10+ sitios para marketing, diseño, tecnología y construcción, con GitHub/Vercel, Supabase, Stripe y CI/CD.",
+    proj_kernel_desc: "Dos fixes en C mergeados al árbol mainline de Linus Torvalds. ueagle-atm rechaza descriptores USB malformados que confunden probe/disconnect y evita un out-of-bounds detectado por KASAN/syzbot; también fue backporteado a múltiples ramas stable.",
+    proj_bettermancera_desc: "App Android para pequeños comercios y ventas a crédito. Flutter, Dart y Room en Free; Firebase Blaze/Auth y un gateway para Gemini API en Pro. Probada por ~18–20 testers, con 10+ instalaciones confirmadas.",
+    proj_mevek_desc: "Proyecto open source en Python que extrae imágenes de PDFs con precisión de píxel, autoetiquetado desde la capa de texto y respaldo OCR; exporta PNG, SQL y manifest.json.",
+    proj_capi_desc: "Fix mainline: media: em28xx: defer audio-only extension registration. Corrige un posible use-after-free en dispositivos dual-TS al diferir el registro hasta completar dev_next; syzbot lo reconoce como fix.",
+    cert_lfd103_desc: "Linux Foundation — LFD103: A Beginner's Guide to Linux Kernel Development (2025).",
+    cert_lfc102_desc: "Linux Foundation — LFC102: Inclusive Open Source Community Orientation (2025).",
+    cert_cecati_desc: "Curso: Mantenimiento Correctivo y Preventivo de Equipos de Cómputo · CECATI, León, Guanajuato · 2024."
+});
+
+Object.assign(translations.en, {
+    meta_desc: "Portfolio of Diego Fernando Mancera Gómez, full-stack developer and Linux Kernel contributor.",
+    hero_role: "Software Developer · Full-Stack · Open Source Contributor (Linux Kernel)",
+    hero_desc: "Two memory-safety fixes merged into Linus Torvalds' mainline tree. Full-stack, Linux and CI/CD development from León, Guanajuato.",
+    about_text1: "Computer Systems Engineering student (7th term) with hands-on full-stack, Linux and CI/CD experience. I have two C fixes merged into Linus Torvalds' mainline tree, focused on memory safety.",
+    about_text2: "At CapiHw Labs I have built 10+ websites and technical solutions, integrating Supabase, Stripe and CI/CD workflows. I also build open-source projects such as Cuentivo and PDF Crop Studio.",
+    proj_cherrycode_desc: "CapiHw Labs: web and technical-solutions developer since 2023. I have built 10+ sites for marketing, design, technology and construction with GitHub/Vercel, Supabase, Stripe and CI/CD.",
+    proj_kernel_desc: "Two C fixes merged into Linus Torvalds' mainline tree. ueagle-atm rejects malformed USB descriptors that confuse probe/disconnect and prevents a KASAN/syzbot-detected out-of-bounds read; it was also backported to multiple stable branches.",
+    proj_bettermancera_desc: "Android app for small businesses and credit sales. Flutter, Dart and Room in Free; Firebase Blaze/Auth and a Gemini API gateway in Pro. Evaluated by ~18–20 testers with 10+ confirmed installs.",
+    proj_mevek_desc: "Open-source Python project that extracts PDF images with pixel precision, text-layer auto-labeling and OCR fallback; exports PNG, SQL and manifest.json.",
+    proj_capi_desc: "Mainline fix: media: em28xx: defer audio-only extension registration. Fixes a possible dual-TS use-after-free by deferring registration until dev_next completes; syzbot recognizes it as the fix.",
+    cert_lfd103_desc: "Linux Foundation — LFD103: A Beginner's Guide to Linux Kernel Development (2025).",
+    cert_lfc102_desc: "Linux Foundation — LFC102: Inclusive Open Source Community Orientation (2025).",
+    cert_cecati_desc: "Course: Corrective and Preventive Computer Maintenance · CECATI, León, Guanajuato · 2024."
+});
+
 let currentLang = 'es';
 
 document.addEventListener('DOMContentLoaded', () => {
