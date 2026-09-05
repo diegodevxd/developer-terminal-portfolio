@@ -91,6 +91,17 @@
                 <a href="#projects" class="cyber-button" data-i18n="hero_cta">INICIAR SECUENCIA_</a>
                 <a href="cv/Diego_Mancera_CV.pdf" download class="cyber-button" data-i18n="hero_cv">DESCARGAR CV_</a>
             </div>
+
+            <!-- Portfolio AI: real link, works with JS disabled. The command line is
+                 decorative; the new-tab notice is screen-reader only. -->
+            <div class="portfolio-ai">
+                <p class="portfolio-ai-cmd" aria-hidden="true">&gt; portfolio_ai --interactive</p>
+                <p class="portfolio-ai-desc" data-i18n="ai_desc">Pregúntale a mi IA de portafolio sobre mis proyectos, experiencia, tecnologías y contribuciones open source.</p>
+                <a href="https://diegodevxd.forkfolio.dev" target="_blank" rel="noopener noreferrer" class="cyber-button">
+                    <span data-i18n="ai_cta">PREGUNTAR A PORTFOLIO AI_</span>
+                    <span class="sr-only" data-i18n="ai_newtab">(se abre en una pestaña nueva)</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -161,8 +172,8 @@
                 <div class="card-lines"></div>
                 <div class="card-content">
                     <div class="card-tag">OPEN SOURCE / KERNEL</div>
-                    <h3>Linux Kernel — usb-linus</h3>
-                    <p data-i18n="proj_kernel_desc">[PATCH] en C aceptado y mergeado en el árbol usb-linus del Kernel de Linux (driver ueagle-atm): corrige una vulnerabilidad de out-of-bounds read explotable por un dispositivo USB malicioso, detectada mediante fuzzing automatizado (KASAN/syzbot) durante la desconexión.</p>
+                    <h3>Linux Kernel — ueagle-atm</h3>
+                    <p data-i18n="proj_kernel_desc">Dos fixes en C mergeados al árbol mainline de Linus Torvalds. ueagle-atm rechaza descriptores USB malformados que confunden probe/disconnect y evita un out-of-bounds detectado por KASAN/syzbot; también fue backporteado a múltiples ramas stable.</p>
                     <div class="card-actions">
                         <a href="https://github.com/torvalds/linux/commit/9dfd800b374c38681364d4b3606a8b831d1478e3" target="_blank" rel="noopener noreferrer" class="cyber-link">[ VER_FIX_MAINLINE ]</a>
                     </div>
@@ -174,9 +185,9 @@
                 <div class="card-content">
                     <div class="card-tag">MOBILE / OPEN SOURCE</div>
                     <h3>Cuentivo</h3>
-                    <p data-i18n="proj_bettermancera_desc">Tienda en línea de distribuidores independientes Betterware. Catálogo de productos para el hogar con pagos seguros vía Stripe y backend en Supabase.</p>
+                    <p data-i18n="proj_cuentivo_desc">App Android para pequeños comercios y ventas a crédito. Flutter, Dart y Room en Free; Firebase Blaze/Auth y un gateway para Gemini API en Pro. Probada por ~18–20 testers, con 10+ instalaciones confirmadas.</p>
                     <div class="card-actions">
-                        <a href="https://github.com/diegodevxd" target="_blank" rel="noopener noreferrer" class="cyber-link">[ VER_GITHUB ]</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.cuentivo.app&amp;pcampaignid=web_share" target="_blank" rel="noopener noreferrer" class="cyber-link">[ GOOGLE_PLAY ]</a>
                     </div>
                 </div>
             </div>
@@ -186,7 +197,7 @@
                 <div class="card-content">
                     <div class="card-tag">PYTHON / OPEN SOURCE</div>
                     <h3>PDF Crop Studio</h3>
-                    <p data-i18n="proj_mevek_desc">Sitio web comercial para tienda de electrónica local. Diseño adaptable y moderno para exhibición de productos tecnológicos.</p>
+                    <p data-i18n="proj_pdfcrop_desc">Proyecto open source en Python que extrae imágenes de PDFs con precisión de píxel, autoetiquetado desde la capa de texto y respaldo OCR; exporta PNG, SQL y manifest.json.</p>
                     <div class="card-actions">
                         <a href="https://github.com/diegodevxd" target="_blank" rel="noopener noreferrer" class="cyber-link">[ VER_GITHUB ]</a>
                     </div>
@@ -198,7 +209,7 @@
                 <div class="card-content">
                     <div class="card-tag">OPEN SOURCE / KERNEL</div>
                     <h3>Linux Kernel — em28xx</h3>
-                    <p data-i18n="proj_capi_desc">Asistente de IA local en desarrollo para tesis universitaria. Arquitectura diseñada para ejecución eficiente en hardware local.</p>
+                    <p data-i18n="proj_em28xx_desc">Fix mainline: media: em28xx: defer audio-only extension registration. Corrige un posible use-after-free en dispositivos dual-TS al diferir el registro hasta completar dev_next; syzbot lo reconoce como fix.</p>
                     <div class="card-actions">
                         <a href="https://github.com/torvalds/linux/commit/95f76f51937fdfb0fc1e14cae606b1ef574a56f3" target="_blank" rel="noopener noreferrer" class="cyber-link">[ VER_FIX_MAINLINE ]</a>
                     </div>
@@ -269,7 +280,7 @@
                 <div class="card-lines"></div>
                 <div class="card-content">
                     <div class="card-tag">HARDWARE</div>
-                    <h3>CECATI (2020)</h3>
+                    <h3>CECATI (2024)</h3>
                     <p data-i18n="cert_cecati_desc">Certificación en Mantenimiento Preventivo y Correctivo de Computadoras. Sólidos fundamentos en hardware y diagnóstico de sistemas.</p>
                 </div>
             </div>
