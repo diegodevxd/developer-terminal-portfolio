@@ -181,22 +181,34 @@ const translations = {
 
 // Current CV content. Kept separate from the UI implementation so ES/EN stay in sync.
 Object.assign(translations.es, {
-    meta_desc: "Portafolio de Diego Fernando Mancera Gómez, desarrollador full-stack y contribuidor del Linux Kernel.",
-    hero_role: "Desarrollador de Software · Full-Stack · Contribuidor Open Source (Linux Kernel)",
-    hero_desc: "Dos fixes de seguridad de memoria integrados al árbol mainline de Linus Torvalds. Desarrollo full-stack, Linux y CI/CD desde León, Guanajuato.",
-    about_text1: "Estudiante de Ingeniería en Sistemas Computacionales (7.º cuatrimestre) con experiencia práctica en desarrollo full-stack, Linux y CI/CD. Tengo dos fixes de C mergeados al árbol mainline de Linus Torvalds, enfocados en seguridad de memoria.",
-    about_text2: "En CapiHw Labs he desarrollado 10+ sitios y soluciones web, integrando Supabase, Stripe y flujos de CI/CD. También desarrollo proyectos open source como Cuentivo y PDF Crop Studio.",
+    meta_desc: "Diego Fernando Mancera Gómez: contribuidor del kernel de Linux (2 parches con CVE) y de HAMi (CNCF), desarrollador full-stack en León, Guanajuato.",
+    hero_role: "Estudiante de Ingeniería en Sistemas · Contribuidor del Kernel de Linux · Desarrollador Full-Stack",
+    hero_desc: "Dos parches en C integrados en el kernel de Linux mainline (USB y media), ambos con CVE asignado, y dos fixes en Go en HAMi (CNCF). Más de 10 sitios web en producción desde León, Guanajuato.",
+    about_text1: "Estudiante de Ingeniería en Sistemas Computacionales en la Universidad EPCA (7.º cuatrimestre, graduación esperada en agosto de 2028). Contribuyo al kernel de Linux y a HAMi (CNCF). Busco prácticas profesionales o un puesto de desarrollo de software (full-stack o sistemas).",
+    about_text2: "Kernel de Linux (ago 2025 – hoy): 2 parches en mainline con CVE, retroportados a stable. HAMi, CNCF (sep 2026 – hoy): 2 fixes en el scheduler de GPUs. CapiHw Labs (2023 – hoy): más de 10 sitios web para clientes con Supabase, Stripe y CI/CD; bajé el tiempo de despliegue de ~10 a 4–5 minutos.",
+    about_langs: "Español (nativo) · Inglés (B2, redacción técnica diaria en listas de correo del kernel)",
+    proj_kernel_desc: "Corregí una lectura fuera de límites (KASAN): descriptores USB manipulados hacían que probe y disconnect discreparan sobre el estado del dispositivo. Integrado en mainline 7.2-rc5 vía netdev/net y retroportado a stable 5.10–7.1. CVE-2026-68344.",
+    proj_em28xx_desc: "Corregí un use-after-free reportado por syzbot en dispositivos dual-TS, difiriendo el registro de extensiones audio-only hasta que dev_next está inicializado. Integrado en mainline 7.3 y retroportado a stable 5.10–7.2. CVE-2026-89892.",
+    proj_hami_score_desc: "Los pods que pedían gpumem y gpumem-percentage se puntuaban con una memoria distinta a la reservada (59 % menos), lo que ordenaba mal las GPUs. Fix con tests de regresión en Go, revisado con Prow (DCO, /lgtm, /approve).",
+    proj_hami_enflame_desc: "Reporté y corregí que un código de modo (-1) se interpretara como porcentaje de memoria, generando memoria negativa (-327 MB) en la puntuación del scheduler. Incluye test de regresión.",
+    proj_cuentivo_desc: "App Android de ventas a crédito para pequeños comercios (Flutter, Dart, Firebase, Gemini API). La versión gratuita guarda los datos localmente; la Pro sincroniza con Firebase Auth y consulta Gemini a través de un gateway propio, con las credenciales fuera del dispositivo. Validada con ~20 testers y más de 10 instalaciones confirmadas.",
     cert_lfd103_desc: "Linux Foundation — LFD103: A Beginner's Guide to Linux Kernel Development (2025).",
     cert_lfc102_desc: "Linux Foundation — LFC102: Inclusive Open Source Community Orientation (2025).",
     cert_cecati_desc: "Curso: Mantenimiento Correctivo y Preventivo de Equipos de Cómputo · CECATI, León, Guanajuato · 2024."
 });
 
 Object.assign(translations.en, {
-    meta_desc: "Portfolio of Diego Fernando Mancera Gómez, full-stack developer and Linux Kernel contributor.",
-    hero_role: "Software Developer · Full-Stack · Open Source Contributor (Linux Kernel)",
-    hero_desc: "Two memory-safety fixes merged into Linus Torvalds' mainline tree. Full-stack, Linux and CI/CD development from León, Guanajuato.",
-    about_text1: "Computer Systems Engineering student (7th term) with hands-on full-stack, Linux and CI/CD experience. I have two C fixes merged into Linus Torvalds' mainline tree, focused on memory safety.",
-    about_text2: "At CapiHw Labs I have built 10+ websites and technical solutions, integrating Supabase, Stripe and CI/CD workflows. I also build open-source projects such as Cuentivo and PDF Crop Studio.",
+    meta_desc: "Diego Fernando Mancera Gómez: Linux kernel contributor (2 patches with CVEs), HAMi (CNCF) contributor and full-stack developer in León, Guanajuato.",
+    hero_role: "Systems Engineering Student · Linux Kernel Contributor · Full-Stack Developer",
+    hero_desc: "Two C patches merged into mainline Linux (USB and media), both with assigned CVEs, plus two Go fixes in HAMi (CNCF). 10+ production websites, built from León, Guanajuato.",
+    about_text1: "Computer Systems Engineering student at Universidad EPCA (7th term, expected graduation August 2028). I contribute to the Linux kernel and HAMi (CNCF). Looking for an internship or a software development role (full-stack or systems).",
+    about_text2: "Linux kernel (Aug 2025 – present): 2 mainline patches with CVEs, backported to stable. HAMi, CNCF (Sep 2026 – present): 2 fixes in the GPU scheduler. CapiHw Labs (2023 – present): 10+ client websites with Supabase, Stripe and CI/CD; cut deploy time from ~10 to 4–5 minutes.",
+    about_langs: "Spanish (native) · English (B2, daily technical writing on kernel mailing lists)",
+    proj_kernel_desc: "Fixed a KASAN out-of-bounds read where crafted USB descriptors made probe and disconnect disagree about device state. Merged into mainline 7.2-rc5 via netdev/net and backported to stable 5.10–7.1. CVE-2026-68344.",
+    proj_em28xx_desc: "Fixed a syzbot-reported use-after-free on dual-TS devices by deferring audio-only extension registration until dev_next is initialized. Merged into mainline 7.3 and backported to stable 5.10–7.2. CVE-2026-89892.",
+    proj_hami_score_desc: "Pods requesting both gpumem and gpumem-percentage were scored with a different memory value than the one reserved (59% lower), which misordered GPUs. Fix with Go regression tests, reviewed through Prow (DCO, /lgtm, /approve).",
+    proj_hami_enflame_desc: "Reported and fixed a mode code (-1) being read as a memory percentage, which produced negative memory (-327 MB) in scheduler scoring. Includes a regression test.",
+    proj_cuentivo_desc: "Android credit-sales app for small shops (Flutter, Dart, Firebase, Gemini API). The free tier stores data locally; Pro syncs with Firebase Auth and calls Gemini through a custom gateway that keeps credentials off the device. Validated with ~20 testers and 10+ confirmed installs.",
     cert_lfd103_desc: "Linux Foundation — LFD103: A Beginner's Guide to Linux Kernel Development (2025).",
     cert_lfc102_desc: "Linux Foundation — LFC102: Inclusive Open Source Community Orientation (2025).",
     cert_cecati_desc: "Course: Corrective and Preventive Computer Maintenance · CECATI, León, Guanajuato · 2024."

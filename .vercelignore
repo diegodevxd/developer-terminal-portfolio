@@ -9,3 +9,6 @@ servicios/flyer.html
 # Skills locales
 .agents/
 skills-lock.json
+
+# Variables locales de Vercel CLI (nunca publicar)
+.env*

@@ -44,7 +44,7 @@ Luego abre `http://localhost:8000`.
 
 ## Despliegue
 
-Desplegado en Vercel: https://developer-terminal-portfolio-dqg2.vercel.app/
+Desplegado en Vercel: https://diegomancera.vercel.app/
 
 El CV (`cv/Diego_Mancera_CV.pdf`) y la imagen de previsualización (`og-image.jpg`, 1200×630) ya están incluidos, y los meta tags de Open Graph apuntan al dominio de producción.
 
