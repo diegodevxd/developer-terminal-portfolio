@@ -34,6 +34,7 @@
   --color-line: #23265a;
   --color-ok: #4ade80;
   --color-accent-electric: #2b2bff;
+  --color-accent-text: #8f8fff;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -61,7 +62,8 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: #23265a;
   --input: #23265a;
-  --ring: #2b2bff;
+  /* Lighter than --accent: a focus ring needs >= 3:1 against --background. */
+  --ring: #8f8fff;
   --radius: 0.625rem;
   color-scheme: dark;
 }

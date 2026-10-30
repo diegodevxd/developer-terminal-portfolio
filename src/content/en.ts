@@ -345,6 +345,7 @@ export const en = {
     navAria: 'Main navigation',
     languageAria: 'Language',
     languageNames: { es: 'Español', en: 'English' },
+    skipToContent: 'Skip to content',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     socialAria: 'Social links',

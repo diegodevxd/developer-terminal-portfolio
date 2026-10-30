@@ -166,6 +166,7 @@ export interface UiLabels {
   readonly navAria: string
   readonly languageAria: string
   readonly languageNames: { readonly es: string; readonly en: string }
+  readonly skipToContent: string
   readonly openMenu: string
   readonly closeMenu: string
   readonly socialAria: string

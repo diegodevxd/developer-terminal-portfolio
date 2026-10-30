@@ -12,7 +12,7 @@ export function TimelineRow({ entry }: { entry: TimelineEntry }) {
       />
       <Reveal className="flex flex-col lg:grid lg:grid-cols-[minmax(14rem,1fr)_auto_1.4fr] lg:items-start lg:gap-10">
         <div className="order-2 mt-4 flex min-w-0 flex-col gap-1 lg:order-1 lg:mt-3">
-          <h3 className="font-display text-2xl leading-tight font-semibold tracking-tight text-accent-electric uppercase">
+          <h3 className="font-display text-2xl leading-tight font-semibold tracking-tight text-accent-text uppercase">
             {role}
           </h3>
           <p className="font-mono text-xs tracking-wide text-foreground">{org}</p>

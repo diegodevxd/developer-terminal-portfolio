@@ -36,6 +36,12 @@ export default function App() {
 
   return (
     <SiteFrame>
+      <a
+        href="#contenido"
+        className="fixed top-4 left-4 z-[60] -translate-y-24 rounded-md bg-accent-electric px-4 py-2 font-mono text-xs tracking-widest text-white uppercase focus:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        {ui.skipToContent}
+      </a>
       <Navbar
         items={nav}
         labels={{
@@ -58,7 +64,7 @@ export default function App() {
         }}
       />
       <ResumeButton href={contact.cv[locale]} label={ui.resume} />
-      <main>
+      <main id="contenido" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
         <OpenSource />

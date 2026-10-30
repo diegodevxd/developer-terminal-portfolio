@@ -346,6 +346,7 @@ export const es = {
     navAria: 'Navegación principal',
     languageAria: 'Idioma',
     languageNames: { es: 'Español', en: 'English' },
+    skipToContent: 'Saltar al contenido',
     openMenu: 'Abrir menú',
     closeMenu: 'Cerrar menú',
     socialAria: 'Redes',
