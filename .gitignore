@@ -4,7 +4,7 @@ node_modules/
 # Variables de entorno (¡secretas!)
 .env
 .env.local
-.env*.local
+.env*
 
 # Vercel
 .vercel
