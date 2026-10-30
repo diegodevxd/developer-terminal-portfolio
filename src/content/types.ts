@@ -102,6 +102,23 @@ export interface Projects {
   readonly heading: SectionHeadingContent
   readonly projects: readonly Project[]
   readonly viewProject: string
+  readonly labels: ProjectsLabels
+}
+
+export interface ProjectsLabels {
+  readonly stack: string
+  readonly summary: string
+  readonly viewRepository: string
+  readonly indexLabel: string
+  readonly hint: string
+  readonly carouselAria: string
+  readonly navAria: string
+  readonly prev: string
+  readonly next: string
+  /** Template; {i}, {n} and {title} are replaced by the carousel. */
+  readonly slideOf: string
+  /** Template; {i}, {n} and {title} are replaced by the carousel. */
+  readonly live: string
 }
 
 export interface StackItem {

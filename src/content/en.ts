@@ -169,6 +169,19 @@ export const en = {
   projects: {
     heading: { eyebrow: 'Work', line1: 'My', line2: 'Projects' },
     viewProject: 'View project',
+    labels: {
+      stack: 'Stack',
+      summary: 'Summary',
+      viewRepository: 'View repository',
+      indexLabel: 'Index',
+      hint: 'Drag to browse',
+      carouselAria: 'Project carousel',
+      navAria: 'Projects',
+      prev: 'Previous project',
+      next: 'Next project',
+      slideOf: '{i} of {n}: {title}',
+      live: 'Project {i} of {n}: {title}',
+    },
     projects: [
       {
         title: 'Cuentivo',

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 
 import {
   Footer,
@@ -18,6 +18,9 @@ import { OpenSource } from '@/features/open-source'
 import { Stack } from '@/features/stack'
 import { useContent } from '@/hooks/useContent'
 import { useLocale } from '@/hooks/useLocale'
+
+// Lazy: keeps the carousel engine out of the initial bundle.
+const Projects = lazy(() => import('@/features/projects').then((m) => ({ default: m.Projects })))
 
 export default function App() {
   const { locale } = useLocale()
@@ -58,12 +61,18 @@ export default function App() {
         <About />
         <OpenSource />
         <Experience />
-        {/* Placeholder until F5 replaces it with features/projects. */}
-        <Section id="proyectos">
-          <Reveal>
-            <SectionHeading {...content.projects.heading} />
-          </Reveal>
-        </Section>
+        <Suspense
+          fallback={
+            <Section id="proyectos">
+              <Reveal>
+                <SectionHeading {...content.projects.heading} />
+              </Reveal>
+              <div className="h-[clamp(560px,92svh,820px)]" aria-hidden="true" />
+            </Section>
+          }
+        >
+          <Projects />
+        </Suspense>
         <Stack />
         <Contact />
       </main>

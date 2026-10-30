@@ -170,6 +170,19 @@ export const es = {
   projects: {
     heading: { eyebrow: 'Trabajo', line1: 'Mis', line2: 'Proyectos' },
     viewProject: 'Ver proyecto',
+    labels: {
+      stack: 'Stack',
+      summary: 'Resumen',
+      viewRepository: 'Ver repositorio',
+      indexLabel: 'Índice',
+      hint: 'Arrastra para explorar',
+      carouselAria: 'Carrusel de proyectos',
+      navAria: 'Proyectos',
+      prev: 'Proyecto anterior',
+      next: 'Proyecto siguiente',
+      slideOf: '{i} de {n}: {title}',
+      live: 'Proyecto {i} de {n}: {title}',
+    },
     projects: [
       {
         title: 'Cuentivo',
