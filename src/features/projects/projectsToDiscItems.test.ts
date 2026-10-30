@@ -19,6 +19,7 @@ describe('projectsToDiscItems', () => {
         label: content.projects.labels.stack,
         value: project.stack.join(' · '),
       })
+      expect(item.fine).toBe(project.stack.join(' · '))
       expect(item.palette).toEqual([
         project.palette?.from,
         project.palette?.accent,

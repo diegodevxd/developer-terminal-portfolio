@@ -32,8 +32,8 @@ export function Projects() {
               serif="var(--font-display)"
               display="var(--font-display)"
               sans="var(--font-sans)"
-              brand="DM"
-              indexLabel={labels.indexLabel}
+              brand=""
+              indexLabel=""
               hint={labels.hint}
               ariaLabel={labels.carouselAria}
               labels={{

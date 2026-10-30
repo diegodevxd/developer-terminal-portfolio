@@ -21,6 +21,8 @@ export function projectsToDiscItems(
     palette: project.palette
       ? [project.palette.from, project.palette.accent, project.palette.to]
       : undefined,
+    // Disc edge print: the stack only (the default repeats every credit, "summary" included).
+    fine: project.stack.join(' · '),
     credits: [
       { label: labels.stack, value: project.stack.join(' · ') },
       { label: labels.summary, value: project.tagline },
