@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils'
 
 interface TerminalCardProps {
+  title: string
   command: string
-  lines: string[]
+  lines: readonly string[]
   className?: string
 }
 
-export function TerminalCard({ command, lines, className }: TerminalCardProps) {
+export function TerminalCard({ title, command, lines, className }: TerminalCardProps) {
   return (
     <div
       className={cn(
@@ -19,7 +20,7 @@ export function TerminalCard({ command, lines, className }: TerminalCardProps) {
         <span aria-hidden="true" className="size-2.5 rounded-full bg-[#febc2e]" />
         <span aria-hidden="true" className="size-2.5 rounded-full bg-[#28c840]" />
         <span className="absolute inset-x-0 text-center text-xs text-muted-foreground">
-          Terminal — zsh
+          {title}
         </span>
       </div>
       <div className="flex flex-col gap-1.5 p-4">

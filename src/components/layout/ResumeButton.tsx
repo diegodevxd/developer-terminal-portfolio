@@ -1,9 +1,9 @@
 interface ResumeButtonProps {
   href: string
-  label?: string
+  label: string
 }
 
-export function ResumeButton({ href, label = 'CV ↓' }: ResumeButtonProps) {
+export function ResumeButton({ href, label }: ResumeButtonProps) {
   return (
     <a
       href={href}

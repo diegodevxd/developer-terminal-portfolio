@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import {
   Footer,
   Navbar,
@@ -8,75 +10,57 @@ import {
   SocialRail,
   TerminalCard,
 } from '@/components/layout'
-import { useLocale, type Locale } from '@/hooks/useLocale'
-
-// Temporary copy for F1. In F2 this moves to src/content/{es,en}.ts.
-const PLACEHOLDER = {
-  es: {
-    nav: [
-      { id: 'inicio', label: 'Inicio' },
-      { id: 'open-source', label: 'Open Source' },
-      { id: 'experiencia', label: 'Experiencia' },
-      { id: 'proyectos', label: 'Proyectos' },
-      { id: 'contacto', label: 'Contacto' },
-    ],
-    sections: {
-      inicio: { eyebrow: 'León, MX · Disponible', line1: 'Desarrollador', line2: 'Full-Stack' },
-      'open-source': { eyebrow: 'Contribuciones', line1: 'Open', line2: 'Source' },
-      experiencia: { eyebrow: 'Trayectoria', line1: 'Mi', line2: 'Experiencia' },
-      proyectos: { eyebrow: 'Trabajo', line1: 'Mis', line2: 'Proyectos' },
-      contacto: { eyebrow: 'Contacto', line1: '¿Hablamos?', line2: 'Escríbeme' },
-    },
-    terminal: {
-      command: 'whoami',
-      lines: ['Texto de prueba uno', 'Texto de prueba dos', 'Texto de prueba tres'],
-    },
-    footer: '© Diego Mancera · Texto de prueba',
-    resume: 'CV ↓',
-  },
-  en: {
-    nav: [
-      { id: 'inicio', label: 'Home' },
-      { id: 'open-source', label: 'Open Source' },
-      { id: 'experiencia', label: 'Experience' },
-      { id: 'proyectos', label: 'Projects' },
-      { id: 'contacto', label: 'Contact' },
-    ],
-    sections: {
-      inicio: { eyebrow: 'León, MX · Available', line1: 'Full-Stack', line2: 'Developer' },
-      'open-source': { eyebrow: 'Contributions', line1: 'Open', line2: 'Source' },
-      experiencia: { eyebrow: 'Career', line1: 'My', line2: 'Experience' },
-      proyectos: { eyebrow: 'Work', line1: 'My', line2: 'Projects' },
-      contacto: { eyebrow: 'Contact', line1: "Let's talk?", line2: 'Write me' },
-    },
-    terminal: {
-      command: 'whoami',
-      lines: ['Placeholder text one', 'Placeholder text two', 'Placeholder text three'],
-    },
-    footer: '© Diego Mancera · Placeholder text',
-    resume: 'CV ↓',
-  },
-} satisfies Record<Locale, unknown>
-
-const LINKS = {
-  github: 'https://github.com/',
-  linkedin: 'https://www.linkedin.com/',
-  email: 'diegomancera.dev@gmail.com',
-  cv: { es: '/cv/Diego-Mancera-CV-ES.pdf', en: '/cv/Diego-Mancera-CV-EN.pdf' },
-} as const
+import type { SectionHeadingContent } from '@/content/types'
+import { useContent } from '@/hooks/useContent'
+import { useLocale } from '@/hooks/useLocale'
 
 export default function App() {
   const { locale } = useLocale()
-  const copy = PLACEHOLDER[locale]
+  const content = useContent()
+  const { meta, nav, hero, contact, ui } = content
+
+  useEffect(() => {
+    document.title = meta.title
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
+  }, [meta])
+
+  // Temporary skeleton until F3/F4 replace each section with its feature component.
+  const headings: Record<string, SectionHeadingContent> = {
+    inicio: { eyebrow: hero.eyebrow, line1: hero.line1, line2: hero.line2 },
+    'open-source': content.openSource.heading,
+    experiencia: content.experience.heading,
+    proyectos: content.projects.heading,
+    contacto: contact.heading,
+  }
 
   return (
     <SiteFrame>
-      <Navbar items={copy.nav} />
-      <SocialRail github={LINKS.github} linkedin={LINKS.linkedin} email={LINKS.email} />
-      <ResumeButton href={LINKS.cv[locale]} label={copy.resume} />
+      <Navbar
+        items={nav}
+        labels={{
+          navAria: ui.navAria,
+          languageAria: ui.languageAria,
+          languageNames: ui.languageNames,
+          openMenu: ui.openMenu,
+          closeMenu: ui.closeMenu,
+        }}
+      />
+      <SocialRail
+        github={contact.github}
+        linkedin={contact.linkedin}
+        email={contact.email}
+        labels={{
+          nav: ui.socialAria,
+          github: ui.github,
+          linkedin: ui.linkedin,
+          email: ui.email,
+        }}
+      />
+      <ResumeButton href={contact.cv[locale]} label={ui.resume} />
       <main>
-        {copy.nav.map(({ id }) => {
-          const section = copy.sections[id as keyof typeof copy.sections]
+        {nav.map(({ id }) => {
+          const heading = headings[id]
+          if (!heading) return null
           return (
             <section
               key={id}
@@ -84,18 +68,15 @@ export default function App() {
               className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-center gap-10 px-6 py-24 lg:px-24"
             >
               <Reveal>
-                <SectionHeading
-                  eyebrow={section.eyebrow}
-                  line1={section.line1}
-                  line2={section.line2}
-                />
+                <SectionHeading {...heading} />
               </Reveal>
               {id === 'inicio' ? (
                 <Reveal delay={0.1}>
                   <TerminalCard
                     className="max-w-xl"
-                    command={copy.terminal.command}
-                    lines={copy.terminal.lines}
+                    title={hero.terminal.title}
+                    command={hero.terminal.command}
+                    lines={hero.terminal.lines}
                   />
                 </Reveal>
               ) : null}
@@ -103,7 +84,7 @@ export default function App() {
           )
         })}
       </main>
-      <Footer text={copy.footer} />
+      <Footer text={content.footer.text} />
     </SiteFrame>
   )
 }

@@ -18,7 +18,7 @@ export function SectionHeading({ eyebrow, line1, line2, id, className }: Section
       ) : null}
       <h2
         id={id}
-        className="font-display text-[clamp(3rem,9vw,8rem)] leading-[0.9] font-bold tracking-tight break-words uppercase"
+        className="font-display text-[clamp(2.25rem,9vw,8rem)] leading-[0.9] font-bold tracking-tight uppercase"
       >
         <span className="block text-foreground">{line1}</span>
         <span className="block text-muted-foreground">{line2}</span>

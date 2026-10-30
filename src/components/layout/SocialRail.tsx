@@ -5,6 +5,7 @@ interface SocialRailProps {
   github: string
   linkedin: string
   email: string
+  labels: { nav: string; github: string; linkedin: string; email: string }
 }
 
 const linkClass =
@@ -22,10 +23,10 @@ function BrandIcon({ path }: { path: string }) {
   )
 }
 
-export function SocialRail({ github, linkedin, email }: SocialRailProps) {
+export function SocialRail({ github, linkedin, email, labels }: SocialRailProps) {
   return (
     <nav
-      aria-label="Social"
+      aria-label={labels.nav}
       className="fixed top-1/2 left-8 z-40 hidden -translate-y-1/2 flex-col items-center gap-3 lg:flex"
     >
       <span aria-hidden="true" className="h-12 w-px bg-line" />
@@ -33,7 +34,7 @@ export function SocialRail({ github, linkedin, email }: SocialRailProps) {
         href={github}
         target="_blank"
         rel="noreferrer noopener"
-        aria-label="GitHub"
+        aria-label={labels.github}
         className={linkClass}
       >
         <BrandIcon path={siGithub.path} />
@@ -42,12 +43,12 @@ export function SocialRail({ github, linkedin, email }: SocialRailProps) {
         href={linkedin}
         target="_blank"
         rel="noreferrer noopener"
-        aria-label="LinkedIn"
+        aria-label={labels.linkedin}
         className={linkClass}
       >
         <BrandIcon path={LINKEDIN_PATH} />
       </a>
-      <a href={`mailto:${email}`} aria-label="Email" className={linkClass}>
+      <a href={`mailto:${email}`} aria-label={labels.email} className={linkClass}>
         <Mail className="size-5" aria-hidden="true" />
       </a>
       <span aria-hidden="true" className="h-12 w-px bg-line" />
