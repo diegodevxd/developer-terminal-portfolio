@@ -173,7 +173,7 @@ export const es = {
     labels: {
       stack: 'Stack',
       summary: 'Resumen',
-      viewRepository: 'Ver repositorio',
+      viewRepository: 'Ver proyecto',
       hint: 'Arrastra para explorar',
       carouselAria: 'Carrusel de proyectos',
       navAria: 'Proyectos',
@@ -186,6 +186,7 @@ export const es = {
       {
         title: 'Cuentivo',
         tagline: 'App Android de ventas a crédito',
+        href: 'https://play.google.com/store/apps/details?id=com.cuentivo.app',
         stack: ['Flutter', 'Dart', 'Firebase', 'Gemini API'],
         bullets: [
           'Permite a pequeños comercios registrar ventas, abonos y saldos vencidos por cliente.',

@@ -4,57 +4,80 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Two static sites in one repo, deployed together on Vercel, sharing no build step (no bundler, no `package.json`, no transpilation):
+Diego Mancera's single-page, bilingual (ES/EN) portfolio: a full-stack developer and Linux kernel
+contributor from León, MX. Built with Vite 6 + React 19 + TypeScript (strict) + Tailwind CSS v4.
+Production: https://diegomancera.vercel.app/ (Vercel project `developer-terminal-portfolio-dqg2`,
+auto-deploys on every push to `main`).
 
-1. **`/` — Cyberpunk portfolio** (`index.html`, `styles.css`, `script.js`, `retro.js`, `retro.css`, `bg3d.js`): Diego Mancera's personal portfolio.
-2. **`/servicios/` — Services landing + paid-checkout funnel** (`servicios/index.html`, `brutalism.css`, `servicios.js`, `checkout.js`): sells three web-dev packages (Básico/Profesional/Premium) with a real Stripe payment flow backed by Supabase.
+The previous static HTML/CSS/JS site (cyberpunk theme, `/servicios/` Stripe funnel, Supabase edge
+functions) was removed in the redesign. It lives on in the git tag `v1-legacy`; nothing in the current
+tree depends on it.
 
-There's also `/admin/` (a private KPI dashboard for the services funnel) and `/supabase/` (Edge Functions + schema) — both excluded from the Vercel deploy via `.vercelignore` but present in git.
-
-## Running locally
-
-No install/build step. Serve the repo root as static files:
+## Commands
 
 ```bash
-python -m http.server 8000
-# or
-npx http-server -p 8000
+npm install
+npm run dev        # Vite dev server
+npm run lint       # ESLint (must be 0 errors)
+npx vitest --run   # one-shot test run (`npm test` is watch mode)
+npm run build      # tsc -b && vite build -> dist/
+npm run preview    # serve dist/ locally
 ```
 
-Open `http://localhost:8000` for the portfolio, `http://localhost:8000/servicios/` for the services site, `http://localhost:8000/admin/` for the dashboard (needs a Supabase admin account to log in). There is no test suite, linter, or build/typecheck command in this repo.
-
-Edge Functions (`supabase/functions/*`) run on Supabase, not Vercel — the deployed site is 100% static. Redeploy a function with:
-```bash
-supabase functions deploy crear-checkout
-supabase functions deploy stripe-webhook --no-verify-jwt
-```
+Before committing: lint, tests and build must all pass.
 
 ## Architecture
 
-### Portfolio (`/`)
-- `script.js` drives the "digital rain" canvas background, the ES/EN i18n system (`data-i18n` attributes on elements, language persisted in `localStorage`), and scroll-reveal/nav-highlight behavior.
-- `bg3d.js` is an ES module (resolved via an import map in `index.html`, pinned to a CDN Three.js build) that renders a floating-hardware 3D scene over the canvas. It self-disables (falls back to the matrix rain from `script.js`) when WebGL isn't supported or on reduced-motion/mobile.
-- `retro.js` + `retro.css` implement an optional "Retro 2010" easter-egg theme toggle (Winamp widget, cursor sparkles, 88x31 badges), stored in `localStorage` under `retro2010` and applied via a `.retro-mode` class on `<html>`. An inline script in `<head>` restores this class before first paint to avoid a flash of the wrong theme. `bg3d.js` listens for a custom `retromode` event to recolor the 3D scene.
+```
+src/
+├── app/          # main.tsx, App.tsx (section order only), providers.tsx (LocaleProvider, LazyMotion)
+├── content/      # types.ts + es.ts + en.ts: ALL visible text, links and project data
+├── features/     # one folder per section: hero, about, open-source, experience, projects, stack, contact
+├── components/
+│   ├── ui/       # ascii-portrait.tsx, disc-cascade-carousel.tsx
+│   └── layout/   # SiteFrame, Navbar, SocialRail, ResumeButton, Footer, Section, SectionHeading,
+│                 #   CornerFrame, TerminalCard, Reveal
+├── hooks/        # useLocale, useContent, useActiveSection, useMediaQuery
+├── lib/          # utils.ts (cn), ascii/engine.ts (pure portrait engine)
+└── styles/       # globals.css: design tokens + self-hosted fonts
+```
 
-### Services funnel (`/servicios/`)
-This is the part of the repo with real business logic — a full contracting funnel, not just a landing page:
+Rules that keep it from turning into cascade code again:
 
-**Flow:** click a package's "Contratar" button → modal opens (`checkout.js`) → Supabase Auth login/signup → fill contact form → accept 50% deposit + terms → insert a row into `solicitudes` (Postgres) → invoke the `crear-checkout` Edge Function → redirect to Stripe Checkout for the deposit → Stripe redirects to `gracias.html` → `stripe-webhook` Edge Function marks the request paid and logs it in `contrataciones`.
+- **Content is data.** No visible string lives in a component. Everything comes from `useContent()`,
+  typed by `src/content/types.ts`. `es.ts` and `en.ts` must have the same shape (a test enforces it).
+  To change the CV content, edit those two files only. Never publish the phone number (a test checks).
+- **One-way dependencies:** `app → features → components → lib`. A feature never imports another feature.
+- **Pure logic in `lib/`.** The ASCII portrait math (`lib/ascii/engine.ts`) is pure and unit-tested;
+  `components/ui/ascii-portrait.tsx` only draws. It samples the photo plus a subject mask
+  (`public/images/diego-portrait-mask.png`, regenerate with `python -I scripts/make-portrait-mask.py`),
+  animates at ≤30 fps, pauses off-screen and respects `prefers-reduced-motion`.
+- **`disc-cascade-carousel.tsx` is a vendored third-party component.** Keep edits minimal and commented
+  (its only changes are i18n `labels` props and an eslint-disable for `react-hooks/refs`, which its
+  spring engine uses on purpose). Projects lazy-loads it and shows a card list below 720px instead.
+- **Bundle budget:** initial JS ≤ ~110 kB gzip. Heavy sections (Projects, Stack, Contact) and motion
+  features are lazy-loaded; keep it that way.
 
-**Where package prices/names live — these three places must be changed together, or Stripe will charge a different amount than the site displays:**
-- `servicios/index.html` — displayed prices/copy in the pricing cards and the comparison table.
-- `servicios/checkout.js` — `PAQUETES` object (`total`/`anticipo` in whole MXN pesos) used for the on-page price summary shown before checkout.
-- `supabase/functions/crear-checkout/index.ts` — `PAQUETES` object (amounts in **centavos**, i.e. ×100) — this is the source of truth Stripe actually charges. The client-side amounts are cosmetic only; the server recomputes everything from `sol.paquete` looked up server-side.
+## Design system
 
-**Data model** (`supabase/schema.sql`):
-- `solicitudes` — every lead that completes the form (RLS: a user can only insert/select their own rows; Edge Functions use the service-role key to bypass RLS and update `pago_estado`).
-- `contrataciones` — an append-only ledger of confirmed payments, written only by the `stripe-webhook` function (service role); no public RLS policies, so it's unreadable from the client.
+Dark only, inspired by hermes-agent.nousresearch.com. Tokens in `src/styles/globals.css`:
+`--background #07081c`, `--card #0e1030`, `--border/line #23265a`, `--foreground #f2f2f2`,
+`--muted-foreground #8a8db8`, `--accent #2b2bff` (electric frame and buttons), `--color-accent-text #8f8fff`
+(accent-colored text; #2b2bff fails contrast as text). Fonts: Antonio (display), Inter (body),
+JetBrains Mono (labels, terminal). Section headings use two tones (line 1 foreground, line 2 muted).
 
-Supabase project ref `jdjemlyvrafzoqtgrmuk` and its anon key are hardcoded in `servicios/checkout.js` and `admin/admin.js` (this is expected — it's the public anon key, safe to expose; write access is gated by RLS policies, not by the key).
+## Assets and SEO
 
-### Admin dashboard (`/admin/`)
-Read-only KPI view over `solicitudes`/`contrataciones` (`admin/admin.js`). Access control is entirely in Postgres: a signed-in user must have a row in the `admins` table (checked client-side after login, enforced by RLS) or they're bounced back to the login screen. Uses Supabase Realtime (`postgres_changes` on `contrataciones`/`solicitudes`) plus browser `Notification`/beep for live "new client" alerts, and Chart.js for the revenue/package charts.
+- CVs: `public/cv/Diego-Mancera-CV-ES.pdf` and `-EN.pdf` (source copies live outside the repo in the
+  owner's `Downloads/CVs` folder).
+- Link preview: `public/og-image.jpg` (1200×630) is a real screenshot of the hero. Retake it if the hero
+  changes. Meta tags, canonical, JSON-LD and preloads are in `index.html`.
 
-## Deploy boundaries
+## Conventions
 
-`.vercelignore` keeps `admin/`, `supabase/`, and `servicios/flyer.html` out of the public Vercel deploy even though they're tracked in git — don't assume everything in the repo is publicly served. When adding a new Edge Function or admin-only tooling, add it there too.
+- Prettier: single quotes, no semicolons. TypeScript strict: no `any`, no `@ts-ignore`.
+- Commit messages: Conventional Commits, in Spanish. Do NOT add `Co-Authored-By` trailers; commits
+  carry only the owner's authorship.
+- `eslint.config.js` is protected by a local hook; fix code instead of loosening lint rules.
+- Planning history of the redesign: `docs/redesign/PLAN.md` and `docs/redesign/PROMPTS.md`.
+  `docs/superpowers/` holds an older, unimplemented "Frutiger Aero" proposal.

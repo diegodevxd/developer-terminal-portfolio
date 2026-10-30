@@ -28,7 +28,7 @@ src/
 ├── lib/            # utils.ts (cn) y lib/ascii/engine.ts (motor puro del retrato)
 └── styles/         # globals.css
 public/             # imágenes, CV en PDF, favicon, og-image, robots.txt, sitemap.xml
-scripts/            # make-portrait-mask.py, make-og-image.py
+scripts/            # make-portrait-mask.py
 docs/redesign/      # plan y prompts del rediseño
 ```
 
@@ -54,12 +54,11 @@ forma). Los PDF del CV están en `public/cv/`.
 
 ## Regenerar imágenes
 
-Requieren Python 3 con Pillow (`pip install pillow`):
+La máscara del retrato ASCII requiere Python 3 con Pillow (`pip install pillow`):
 
 ```bash
-python -I scripts/make-portrait-mask.py   # máscara del retrato ASCII (public/images/diego-portrait-mask.png)
-python -I scripts/make-og-image.py        # public/og-image.png (1200x630)
+python -I scripts/make-portrait-mask.py   # public/images/diego-portrait-mask.png
 ```
 
-`make-og-image.py` usa la fuente Antonio si están instalados `fonttools` y `brotli`
-(`pip install fonttools brotli`); si no, recurre a una fuente condensada del sistema.
+La imagen de vista previa para redes (`public/og-image.jpg`, 1200×630) es una captura real del
+hero del sitio. Si cambia el diseño, vuelve a tomarla a 1200×630 y reemplaza el archivo.

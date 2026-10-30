@@ -172,7 +172,7 @@ export const en = {
     labels: {
       stack: 'Stack',
       summary: 'Summary',
-      viewRepository: 'View repository',
+      viewRepository: 'View project',
       hint: 'Drag to browse',
       carouselAria: 'Project carousel',
       navAria: 'Projects',
@@ -185,6 +185,7 @@ export const en = {
       {
         title: 'Cuentivo',
         tagline: 'Android app for credit sales',
+        href: 'https://play.google.com/store/apps/details?id=com.cuentivo.app',
         stack: ['Flutter', 'Dart', 'Firebase', 'Gemini API'],
         bullets: [
           'Lets small businesses track sales, payments and overdue balances per customer.',
