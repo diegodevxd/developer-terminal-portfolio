@@ -3,3 +3,6 @@
 .claude/
 .codex/
 docs/
+
+# Variables locales de Vercel CLI (nunca publicar)
+.env*
