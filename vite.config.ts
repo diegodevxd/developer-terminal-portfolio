@@ -12,6 +12,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  build: {
+    // Evergreen browsers only: skips down-leveling helpers.
+    target: 'es2022',
+  },
   test: {
     environment: 'jsdom',
     globals: true,

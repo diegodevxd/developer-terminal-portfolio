@@ -1,4 +1,4 @@
-import { MotionConfig } from 'motion/react'
+import { LazyMotion, MotionConfig } from 'motion/react'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import {
@@ -26,10 +26,14 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
 }
 
+const loadMotionFeatures = () => import('./motionFeatures').then((mod) => mod.default)
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <MotionConfig reducedMotion="user">
-      <LocaleProvider>{children}</LocaleProvider>
+      <LazyMotion features={loadMotionFeatures} strict>
+        <LocaleProvider>{children}</LocaleProvider>
+      </LazyMotion>
     </MotionConfig>
   )
 }

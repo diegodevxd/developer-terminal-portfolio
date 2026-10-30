@@ -11,16 +11,18 @@ import {
   SocialRail,
 } from '@/components/layout'
 import { About } from '@/features/about'
-import { Contact } from '@/features/contact'
 import { Experience } from '@/features/experience'
 import { Hero } from '@/features/hero'
 import { OpenSource } from '@/features/open-source'
-import { Stack } from '@/features/stack'
 import { useContent } from '@/hooks/useContent'
 import { useLocale } from '@/hooks/useLocale'
 
 // Lazy: keeps the carousel engine out of the initial bundle.
 const Projects = lazy(() => import('@/features/projects').then((m) => ({ default: m.Projects })))
+// Lazy: last section, nothing above the fold depends on it.
+const Contact = lazy(() => import('@/features/contact').then((m) => ({ default: m.Contact })))
+// Lazy: keeps the simple-icons paths out of the initial bundle.
+const Stack = lazy(() => import('@/features/stack').then((m) => ({ default: m.Stack })))
 
 export default function App() {
   const { locale } = useLocale()
@@ -73,8 +75,30 @@ export default function App() {
         >
           <Projects />
         </Suspense>
-        <Stack />
-        <Contact />
+        <Suspense
+          fallback={
+            <Section id="stack">
+              <Reveal>
+                <SectionHeading {...content.stack.heading} />
+              </Reveal>
+              <div className="h-[28rem]" aria-hidden="true" />
+            </Section>
+          }
+        >
+          <Stack />
+        </Suspense>
+        <Suspense
+          fallback={
+            <Section id="contacto">
+              <Reveal>
+                <SectionHeading {...content.contact.heading} />
+              </Reveal>
+              <div className="h-48" aria-hidden="true" />
+            </Section>
+          }
+        >
+          <Contact />
+        </Suspense>
       </main>
       <Footer text={content.footer.text} />
     </SiteFrame>

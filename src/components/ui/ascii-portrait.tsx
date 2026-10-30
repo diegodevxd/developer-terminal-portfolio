@@ -256,6 +256,10 @@ export function AsciiPortrait({
         src={currentSrc}
         alt=""
         aria-hidden="true"
+        width={900}
+        height={1125}
+        fetchPriority="high"
+        decoding="async"
         onLoad={() => setLoadId((n) => n + 1)}
         onError={() => {
           if (fallbackSrc && currentSrc !== fallbackSrc) setCurrentSrc(fallbackSrc)
