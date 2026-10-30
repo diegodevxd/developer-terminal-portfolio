@@ -174,7 +174,6 @@ export const es = {
       stack: 'Stack',
       summary: 'Resumen',
       viewRepository: 'Ver repositorio',
-      indexLabel: 'Índice',
       hint: 'Arrastra para explorar',
       carouselAria: 'Carrusel de proyectos',
       navAria: 'Proyectos',

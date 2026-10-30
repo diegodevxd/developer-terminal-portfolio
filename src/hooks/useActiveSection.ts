@@ -31,12 +31,13 @@ export function useActiveSection(ids: readonly string[]): string {
 
     const update = () => {
       frame = 0
-      const next = pickActiveSection(
-        sectionIds,
-        (id) => document.getElementById(id)?.getBoundingClientRect().top ?? null,
-        window.innerHeight,
+      setActive(
+        pickActiveSection(
+          sectionIds,
+          (id) => document.getElementById(id)?.getBoundingClientRect().top ?? null,
+          window.innerHeight,
+        ),
       )
-      setActive(next)
     }
     const schedule = () => {
       if (frame === 0) frame = window.requestAnimationFrame(update)

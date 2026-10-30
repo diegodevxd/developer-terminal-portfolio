@@ -15,7 +15,8 @@ export function Hero() {
       id="inicio"
       className="mx-auto grid min-h-dvh w-full max-w-6xl items-center gap-10 px-6 py-24 lg:grid-cols-2 lg:gap-12 lg:px-24"
     >
-      <Reveal className="order-first mx-auto w-full max-w-[420px] lg:order-last lg:mr-0 lg:ml-auto lg:max-w-none lg:w-[min(100%,calc(80vh*0.8))]">
+      {/* No entrance animation: the portrait is the LCP element, it must paint immediately. */}
+      <div className="order-first mx-auto w-full max-w-[420px] lg:order-last lg:mr-0 lg:ml-auto lg:max-w-none lg:w-[min(100%,calc(80vh*0.8))]">
         <CornerFrame className="p-2">
           <AsciiPortrait
             src="/images/diego-portrait.webp"
@@ -25,7 +26,7 @@ export function Hero() {
             className="aspect-[4/5] w-full"
           />
         </CornerFrame>
-      </Reveal>
+      </div>
 
       <div className="flex min-w-0 flex-col gap-8">
         <Reveal className="flex flex-col gap-4">

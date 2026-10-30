@@ -173,7 +173,6 @@ export const en = {
       stack: 'Stack',
       summary: 'Summary',
       viewRepository: 'View repository',
-      indexLabel: 'Index',
       hint: 'Drag to browse',
       carouselAria: 'Project carousel',
       navAria: 'Projects',

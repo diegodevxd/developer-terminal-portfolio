@@ -109,7 +109,6 @@ export interface ProjectsLabels {
   readonly stack: string
   readonly summary: string
   readonly viewRepository: string
-  readonly indexLabel: string
   readonly hint: string
   readonly carouselAria: string
   readonly navAria: string
