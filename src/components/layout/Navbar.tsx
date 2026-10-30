@@ -79,7 +79,7 @@ export function Navbar({ items, labels }: NavbarProps) {
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
-                  <Icon className="size-4" aria-hidden="true" />
+                  <Icon className="size-4 shrink-0" aria-hidden="true" />
                   <span className="hidden md:inline">{item.label}</span>
                 </a>
               </li>
@@ -130,7 +130,7 @@ export function Navbar({ items, labels }: NavbarProps) {
         {open ? (
           <ul
             id="mobile-nav"
-            className="absolute inset-x-0 top-full mt-2 rounded-2xl border border-line bg-card/95 p-2 backdrop-blur-md sm:hidden"
+            className="absolute top-full right-0 mt-2 w-max max-w-[calc(100vw-1.5rem)] min-w-full rounded-2xl border border-line bg-card/95 p-1.5 backdrop-blur-md sm:hidden"
           >
             {items.map((item) => {
               const Icon = ICONS[item.id] ?? Home
@@ -142,13 +142,13 @@ export function Navbar({ items, labels }: NavbarProps) {
                     onClick={() => setOpen(false)}
                     aria-current={isActive ? 'true' : undefined}
                     className={cn(
-                      'flex items-center gap-3 rounded-xl px-3 py-2.5 font-mono text-xs tracking-wide transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                      'flex items-center gap-3 rounded-xl px-3 py-2.5 font-mono text-xs tracking-wide whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
                       isActive
                         ? 'bg-accent-electric text-white'
                         : 'text-muted-foreground hover:text-foreground',
                     )}
                   >
-                    <Icon className="size-4" aria-hidden="true" />
+                    <Icon className="size-4 shrink-0" aria-hidden="true" />
                     {item.label}
                   </a>
                 </li>

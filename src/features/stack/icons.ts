@@ -1,0 +1,60 @@
+import {
+  siC,
+  siClaude,
+  siCss,
+  siCursor,
+  siDart,
+  siFirebase,
+  siFlutter,
+  siGit,
+  siGithub,
+  siGithubactions,
+  siGooglegemini,
+  siGo,
+  siHtml5,
+  siJavascript,
+  siKubernetes,
+  siLinux,
+  siModelcontextprotocol,
+  siNextdotjs,
+  siOllama,
+  siPostgresql,
+  siPython,
+  siSupabase,
+  siTypescript,
+  siVercel,
+  type SimpleIcon,
+} from 'simple-icons'
+
+// Only the slugs used by src/content are imported, to keep the bundle small.
+const ICONS: Readonly<Record<string, SimpleIcon>> = {
+  c: siC,
+  claude: siClaude,
+  css: siCss,
+  cursor: siCursor,
+  dart: siDart,
+  firebase: siFirebase,
+  flutter: siFlutter,
+  git: siGit,
+  github: siGithub,
+  githubactions: siGithubactions,
+  go: siGo,
+  googlegemini: siGooglegemini,
+  html5: siHtml5,
+  javascript: siJavascript,
+  kubernetes: siKubernetes,
+  linux: siLinux,
+  modelcontextprotocol: siModelcontextprotocol,
+  nextdotjs: siNextdotjs,
+  ollama: siOllama,
+  postgresql: siPostgresql,
+  python: siPython,
+  supabase: siSupabase,
+  typescript: siTypescript,
+  vercel: siVercel,
+}
+
+export function getIconPath(slug: string | undefined): string | undefined {
+  if (!slug) return undefined
+  return ICONS[slug]?.path
+}

@@ -5,12 +5,17 @@ import {
   Navbar,
   Reveal,
   ResumeButton,
+  Section,
   SectionHeading,
   SiteFrame,
   SocialRail,
 } from '@/components/layout'
-import type { SectionHeadingContent } from '@/content/types'
+import { About } from '@/features/about'
+import { Contact } from '@/features/contact'
+import { Experience } from '@/features/experience'
 import { Hero } from '@/features/hero'
+import { OpenSource } from '@/features/open-source'
+import { Stack } from '@/features/stack'
 import { useContent } from '@/hooks/useContent'
 import { useLocale } from '@/hooks/useLocale'
 
@@ -23,14 +28,6 @@ export default function App() {
     document.title = meta.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
   }, [meta])
-
-  // Temporary skeleton until F3/F4 replace each section with its feature component.
-  const headings: Record<string, SectionHeadingContent> = {
-    'open-source': content.openSource.heading,
-    experiencia: content.experience.heading,
-    proyectos: content.projects.heading,
-    contacto: contact.heading,
-  }
 
   return (
     <SiteFrame>
@@ -57,22 +54,18 @@ export default function App() {
       />
       <ResumeButton href={contact.cv[locale]} label={ui.resume} />
       <main>
-        {nav.map(({ id }) => {
-          if (id === 'inicio') return <Hero key={id} />
-          const heading = headings[id]
-          if (!heading) return null
-          return (
-            <section
-              key={id}
-              id={id}
-              className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-center gap-10 px-6 py-24 lg:px-24"
-            >
-              <Reveal>
-                <SectionHeading {...heading} />
-              </Reveal>
-            </section>
-          )
-        })}
+        <Hero />
+        <About />
+        <OpenSource />
+        <Experience />
+        {/* Placeholder until F5 replaces it with features/projects. */}
+        <Section id="proyectos">
+          <Reveal>
+            <SectionHeading {...content.projects.heading} />
+          </Reveal>
+        </Section>
+        <Stack />
+        <Contact />
       </main>
       <Footer text={content.footer.text} />
     </SiteFrame>
