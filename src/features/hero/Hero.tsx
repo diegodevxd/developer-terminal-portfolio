@@ -20,6 +20,7 @@ export function Hero() {
           <AsciiPortrait
             src="/images/diego-portrait.webp"
             fallbackSrc="/images/diego-portrait.jpg"
+            maskSrc="/images/diego-portrait-mask.png"
             alt={hero.portraitAlt}
             className="aspect-[4/5] w-full"
           />

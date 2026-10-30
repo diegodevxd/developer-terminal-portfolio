@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 
 import {
   CHARSETS,
-  adjust,
-  glyphFor,
   noiseTile,
   sampleGrid,
-  shimmer,
+  applyWave,
+  waveAt,
+  subjectDensity,
   type CharsetName,
 } from '@/lib/ascii/engine'
 import { cn } from '@/lib/utils'
@@ -15,20 +15,23 @@ interface AsciiPortraitProps {
   src: string
   alt: string
   fallbackSrc?: string
+  /** Grayscale subject mask, same framing as `src` (white = subject). */
+  maskSrc: string
   cellSize?: number
   charset?: CharsetName
   contrast?: number
-  /** Dark subject on a light backdrop becomes dense glyphs; the backdrop stays empty. */
-  invert?: boolean
   animate?: boolean
   className?: string
 }
 
 const MOBILE_BREAKPOINT = 640
-const MOBILE_CELL_SIZE = 8
+const MOBILE_CELL_SIZE = 6
 const FRAME_MS = 1000 / 30
-const BACKDROP_THRESHOLD = 0.13
-const GAMMA = 0.5
+const DENSITY_FLOOR = 0.18
+// Photo-specific window: skin sits around 0.5-0.65, eyes/brows/hair far below, shirt above.
+const LUMA_LOW = 0.1
+const LUMA_HIGH = 0.68
+const DENSITY_GAMMA = 1.3
 const ACCENT_MIX = 0.25
 const TINT_FROM = 0.8
 const SHIMMER_INTENSITY = 0.6
@@ -58,10 +61,10 @@ export function AsciiPortrait({
   src,
   alt,
   fallbackSrc,
-  cellSize = 10,
+  maskSrc,
+  cellSize = 8,
   charset = 'standard',
   contrast = 128,
-  invert = true,
   animate = true,
   className,
 }: AsciiPortraitProps) {
@@ -70,13 +73,23 @@ export function AsciiPortrait({
   const imgRef = useRef<HTMLImageElement>(null)
   const [loadId, setLoadId] = useState(0)
   const [currentSrc, setCurrentSrc] = useState(src)
+  const [maskImg, setMaskImg] = useState<HTMLImageElement | null>(null)
   const [grainUrl] = useState(makeGrainUrl)
+
+  useEffect(() => {
+    const m = new Image()
+    m.onload = () => setMaskImg(m)
+    m.src = maskSrc
+    return () => {
+      m.onload = null
+    }
+  }, [maskSrc])
 
   useEffect(() => {
     const container = containerRef.current
     const canvas = canvasRef.current
     const img = imgRef.current
-    if (!container || !canvas || !img || loadId === 0) return
+    if (!container || !canvas || !img || !maskImg || loadId === 0) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -120,13 +133,17 @@ export function AsciiPortrait({
       if (!atlas) return
       const cellW = canvas.width / cols
       const cellH = canvas.height / rows
+      ctx.imageSmoothingEnabled = false
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const waves = new Float32Array(cols + rows)
+      for (let d = 0; d < waves.length; d++) waves[d] = waveAt(t, d)
+      const last = chars.length - 1
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const v = base[row * cols + col]
           if (v <= 0) continue
-          const m = still ? v : shimmer(v, col, row, t, SHIMMER_INTENSITY)
-          const gi = chars.indexOf(glyphFor(m, chars))
+          const m = still ? v : applyWave(v, waves[col + row], SHIMMER_INTENSITY)
+          const gi = Math.round(m * last)
           if (gi <= 0) continue
           ctx.drawImage(
             atlas,
@@ -165,30 +182,34 @@ export function AsciiPortrait({
       const h = container.clientHeight
       if (w === 0 || h === 0 || !img.naturalWidth) return
       const cs = w < MOBILE_BREAKPOINT ? MOBILE_CELL_SIZE : cellSize
-      const off = document.createElement('canvas')
-      off.width = w
-      off.height = h
-      const octx = off.getContext('2d', { willReadFrequently: true })
-      if (!octx) return
-      // object-fit: cover, anchored to the top so the face is never cropped.
-      const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight)
-      const dw = img.naturalWidth * scale
-      octx.drawImage(img, (w - dw) / 2, 0, dw, img.naturalHeight * scale)
-      const grid = sampleGrid(octx.getImageData(0, 0, w, h).data, w, h, cs)
+      const draw2d = (source: HTMLImageElement) => {
+        const off = document.createElement('canvas')
+        off.width = w
+        off.height = h
+        const octx = off.getContext('2d', { willReadFrequently: true })
+        if (!octx) return null
+        // object-fit: cover, anchored to the top so the face is never cropped.
+        const scale = Math.max(w / source.naturalWidth, h / source.naturalHeight)
+        const dw = source.naturalWidth * scale
+        octx.drawImage(source, (w - dw) / 2, 0, dw, source.naturalHeight * scale)
+        return octx.getImageData(0, 0, w, h).data
+      }
+      const photo = draw2d(img)
+      const maskPixels = draw2d(maskImg)
+      if (!photo || !maskPixels) return
+      const grid = sampleGrid(photo, w, h, cs, maskPixels)
       cols = grid.cols
       rows = grid.rows
-
-      // Estimate the plain backdrop level from the top corners (the bottom is the jacket).
-      const edge = Math.min(3, cols)
-      let bg = 0
-      for (let i = 0; i < edge; i++) bg += grid.values[i] + grid.values[cols - 1 - i]
-      bg /= edge * 2
+      const mask = grid.mask ?? new Float32Array(grid.values.length)
       base = new Float32Array(grid.values.length)
       for (let i = 0; i < base.length; i++) {
-        const l = grid.values[i]
-        const d = invert ? Math.min(1, Math.abs(bg - l) / Math.max(0.25, bg)) : l
-        // Below the threshold the backdrop stays empty; a gamma lifts the mid-tone skin.
-        base[i] = d < BACKDROP_THRESHOLD ? 0 : adjust(Math.pow(d, GAMMA), { contrast })
+        base[i] = subjectDensity(grid.values[i], mask[i], {
+          low: LUMA_LOW,
+          high: LUMA_HIGH,
+          floor: DENSITY_FLOOR,
+          gamma: DENSITY_GAMMA,
+          contrast,
+        })
       }
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -221,7 +242,7 @@ export function AsciiPortrait({
       io.disconnect()
       document.removeEventListener('visibilitychange', syncLoop)
     }
-  }, [loadId, cellSize, charset, contrast, invert, animate])
+  }, [loadId, maskImg, cellSize, charset, contrast, animate])
 
   return (
     <div

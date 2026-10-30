@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { CHARSETS, adjust, glyphFor, luminance, noiseTile, sampleGrid, shimmer } from './engine'
+import {
+  CHARSETS,
+  adjust,
+  glyphFor,
+  luminance,
+  noiseTile,
+  sampleGrid,
+  shimmer,
+  subjectDensity,
+} from './engine'
 
 describe('luminance', () => {
   it('returns the extremes', () => {
@@ -77,5 +86,40 @@ describe('noiseTile', () => {
   })
   it('has the right length', () => {
     expect(noiseTile(8, 1)).toHaveLength(8 * 8 * 4)
+  })
+})
+
+describe('sampleGrid mask', () => {
+  it('averages the mask per cell', () => {
+    const data = new Uint8ClampedArray(4 * 4 * 4).fill(255)
+    const maskData = new Uint8ClampedArray(4 * 4 * 4)
+    for (let y = 0; y < 4; y++) {
+      for (let x = 0; x < 4; x++) {
+        const v = x < 2 ? 255 : 0
+        const i = (y * 4 + x) * 4
+        maskData[i] = maskData[i + 1] = maskData[i + 2] = v
+        maskData[i + 3] = 255
+      }
+    }
+    const grid = sampleGrid(data, 4, 4, 2, maskData)
+    expect(Array.from(grid.mask ?? [])).toEqual([1, 0, 1, 0])
+  })
+})
+
+describe('subjectDensity', () => {
+  it('is empty outside the mask', () => {
+    expect(subjectDensity(0.9, 0.2)).toBe(0)
+  })
+  it('keeps at least the floor inside the subject', () => {
+    expect(subjectDensity(0, 1, { floor: 0.18 })).toBeCloseTo(0.18, 6)
+  })
+  it('is monotonic and reaches 1 for the brightest', () => {
+    const a = subjectDensity(0.3, 1)
+    const b = subjectDensity(0.6, 1)
+    expect(b).toBeGreaterThan(a)
+    expect(subjectDensity(1, 1)).toBeCloseTo(1, 6)
+  })
+  it('normalizes within the given window', () => {
+    expect(subjectDensity(0.5, 1, { low: 0.2, high: 0.6, floor: 0 })).toBeCloseTo(0.75, 6)
   })
 })

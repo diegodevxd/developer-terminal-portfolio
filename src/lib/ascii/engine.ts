@@ -15,6 +15,21 @@ export interface Grid {
   cols: number
   rows: number
   values: Float32Array
+  /** Mean mask value per cell (0..1); only present when a mask buffer is given. */
+  mask?: Float32Array
+}
+
+export interface SubjectOptions {
+  /** Luminance mapped to the lowest density (subject-relative). */
+  low?: number
+  /** Luminance mapped to the highest density. */
+  high?: number
+  /** Minimum density of any subject cell, so dark hair and clothes keep a silhouette. */
+  floor?: number
+  /** < 1 lifts mid-tones. */
+  gamma?: number
+  /** 0..255, 128 = neutral. */
+  contrast?: number
 }
 
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v)
@@ -38,10 +53,12 @@ export function sampleGrid(
   width: number,
   height: number,
   cellSize: number,
+  maskData?: Uint8ClampedArray,
 ): Grid {
   const cols = Math.max(1, Math.floor(width / cellSize))
   const rows = Math.max(1, Math.floor(height / cellSize))
   const values = new Float32Array(cols * rows)
+  const mask = maskData ? new Float32Array(cols * rows) : undefined
   for (let row = 0; row < rows; row++) {
     const y0 = Math.floor((row * height) / rows)
     const y1 = Math.max(y0 + 1, Math.floor(((row + 1) * height) / rows))
@@ -49,18 +66,36 @@ export function sampleGrid(
       const x0 = Math.floor((col * width) / cols)
       const x1 = Math.max(x0 + 1, Math.floor(((col + 1) * width) / cols))
       let sum = 0
+      let maskSum = 0
       let count = 0
       for (let y = y0; y < y1; y++) {
         for (let x = x0; x < x1; x++) {
           const i = (y * width + x) * 4
           sum += luminance(data[i], data[i + 1], data[i + 2])
+          if (maskData) maskSum += maskData[i] / 255
           count++
         }
       }
       values[row * cols + col] = count ? sum / count : 0
+      if (mask) mask[row * cols + col] = count ? maskSum / count : 0
     }
   }
-  return { cols, rows, values }
+  return { cols, rows, values, mask }
+}
+
+/**
+ * Glyph density (0..1) of a cell: 0 outside the subject, otherwise a positive photographic
+ * mapping of the subject's own luminance (bright skin -> dense glyph) above a floor.
+ */
+export function subjectDensity(
+  l: number,
+  mask: number,
+  { low = 0, high = 1, floor = 0.18, gamma = 1, contrast = 128 }: SubjectOptions = {},
+): number {
+  if (mask < 0.5) return 0
+  const norm = clamp01((l - low) / Math.max(1e-6, high - low))
+  const curved = adjust(Math.pow(norm, gamma), { contrast })
+  return floor + (1 - floor) * curved
 }
 
 /** Picks the glyph for a 0..1 value. Dark to light by default. */
@@ -68,6 +103,17 @@ export function glyphFor(value: number, charset: string, invert = false): string
   const v = clamp01(value)
   const index = Math.round((invert ? 1 - v : v) * (charset.length - 1))
   return charset.charAt(index)
+}
+
+/** Diagonal travelling wave (0..1) at diagonal index `diag` = col + row. */
+export function waveAt(t: number, diag: number, speed = 1, k = 0.35): number {
+  return 0.5 + 0.5 * Math.sin(t * speed - diag * k)
+}
+
+/** Modulates a 0..1 value with a precomputed wave sample. */
+export function applyWave(value: number, wave: number, intensity: number): number {
+  // Dips at most 40% * intensity so the wave never hides facial detail.
+  return clamp01(value * (1 - intensity * 0.4 * (1 - wave)))
 }
 
 /** Diagonal travelling wave that modulates a 0..1 value. */
@@ -80,8 +126,7 @@ export function shimmer(
   speed = 1,
   k = 0.35,
 ): number {
-  const wave = 0.5 + 0.5 * Math.sin(t * speed - (col + row) * k)
-  return clamp01(value * (1 - intensity + intensity * wave * 1.6))
+  return applyWave(value, waveAt(t, col + row, speed, k), intensity)
 }
 
 /** Deterministic grayscale noise (mulberry32 PRNG), size x size pixels as RGBA. */
