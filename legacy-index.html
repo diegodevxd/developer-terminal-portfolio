@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portafolio personal cyberpunk de un estudiante de Ingeniería en Sistemas.">
+    <meta name="author" content="Diego Fernando Mancera Gómez">
+    <meta name="keywords" content="desarrollador, portafolio, ingeniería en sistemas, frontend, web developer, freelance, Diego Mancera">
+    <meta name="theme-color" content="#050505">
+    <title>Diego Mancera // Desarrollador & Estudiante de Sistemas</title>
+
+    <link rel="canonical" href="https://developer-terminal-portfolio-dqg2.vercel.app/">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Diego Mancera">
+    <meta property="og:url" content="https://developer-terminal-portfolio-dqg2.vercel.app/">
+    <meta property="og:title" content="Diego Mancera // Desarrollador & Estudiante de Sistemas">
+    <meta property="og:description" content="Portafolio personal cyberpunk. Desarrollo web freelance, IA local y proyectos de bajo nivel en Linux.">
+    <meta property="og:image" content="https://developer-terminal-portfolio-dqg2.vercel.app/og-image.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Diego Mancera — Desarrollador & Estudiante de Ingeniería en Sistemas">
+    <meta property="og:locale" content="es_ES">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://developer-terminal-portfolio-dqg2.vercel.app/">
+    <meta name="twitter:title" content="Diego Mancera // Desarrollador & Estudiante de Sistemas">
+    <meta name="twitter:description" content="Portafolio personal cyberpunk. Desarrollo web freelance, IA local y proyectos de bajo nivel en Linux.">
+    <meta name="twitter:image" content="https://developer-terminal-portfolio-dqg2.vercel.app/og-image.jpg">
+    <meta name="twitter:image:alt" content="Diego Mancera — Desarrollador & Estudiante de Ingeniería en Sistemas">
+
+    <!-- Favicon (inline SVG, sin archivos extra) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050505'/%3E%3Crect x='1' y='1' width='30' height='30' fill='none' stroke='%2300ffff' stroke-width='1.5'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' font-weight='bold' fill='%2300ffff'%3ED%3C/text%3E%3C/svg%3E">
+
+    <!-- Restore retro mode before first paint to avoid a flash of the normal theme -->
+    <script>try{if(localStorage.getItem('retro2010')==='1'){document.documentElement.classList.add('retro-mode');}}catch(e){}</script>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="retro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <canvas id="bg3d-canvas" aria-hidden="true" hidden></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <nav class="navbar">
+        <div class="logo">SYS.ENG_<span>DIEGO</span></div>
+        <div class="nav-links" id="nav-links">
+            <a href="#about" data-i18n="nav_about">Acerca de</a>
+            <a href="#projects" data-i18n="nav_projects">Proyectos</a>
+            <a href="#certifications" data-i18n="nav_certifications">Certificaciones</a>
+            <a href="servicios/" class="nav-servicios" data-i18n="nav_services">Servicios</a>
+            <a href="#contact" data-i18n="nav_contact">Contacto</a>
+        </div>
+        <div class="nav-right">
+            <button id="retro-toggle" class="cyber-button small" aria-pressed="false" title="Modo retro 2010"
+                aria-label="Modo retro 2010">★2010</button>
+            <button id="lang-toggle" class="cyber-button small">EN / ES</button>
+            <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="nav-overlay" id="nav-overlay"></div>
+
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-corner tl"></span>
+            <span class="hero-corner br"></span>
+            <div class="hero-badge">// SYS.STATUS: ONLINE //</div>
+            <h1 class="glitch" data-i18n="hero_title" data-text="HOLA, MUNDO //">HOLA, MUNDO //</h1>
+            <h2 class="subtitle" data-i18n="hero_role">Desarrollador & Estudiante de Ing. en Sistemas (6/12 Semestres)
+            </h2>
+            <p class="description" data-i18n="hero_desc">Construyendo el futuro digital. Experiencia en freelance,
+                desarrollo web y creación de experiencias interactivas.</p>
+            <div class="hero-actions">
+                <a href="servicios/" class="cyber-button primary">CONTRATAR SERVICIOS_</a>
+                <a href="#projects" class="cyber-button" data-i18n="hero_cta">INICIAR SECUENCIA_</a>
+                <a href="cv/Diego_Mancera_CV.pdf" download class="cyber-button" data-i18n="hero_cv">DESCARGAR CV_</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="section container">
+        <h2 class="section-title glitch" data-i18n="title_profile" data-text=">PERFIL_">>PERFIL_</h2>
+        <div class="about-content">
+            <div class="scroll-tilt-stage">
+                <div class="scroll-tilt-card">
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <span class="btn close"></span>
+                            <span class="btn min"></span>
+                            <span class="btn max"></span>
+                            <span class="title">user@sys_eng:~</span>
+                        </div>
+                        <div class="terminal-body">
+                            <p><span class="prompt">user@sys_eng:~$</span> whoami</p>
+                            <p class="output" data-i18n="about_text1">Soy estudiante de 6to semestre (de 12) de Ingeniería en
+                                Sistemas. Apasionado por la tecnología, la estética cyberpunk y la creación de arquitecturas
+                                limpias y eficientes.</p>
+                            <p><span class="prompt">user@sys_eng:~$</span> get_skills --tech</p>
+                            <p class="output highlight">HTML5, CSS3, JavaScript, Rust, Java, Python, Linux, UI/UX, Git, Programación Orientada a Objetos
+                            </p>
+                            <p><span class="prompt">user@sys_eng:~$</span> get_experience --list</p>
+                            <p class="output" data-i18n="about_text2">Trabajo freelance apoyando a pequeños negocios locales a
+                                digitalizarse. Creo portafolios únicos, páginas para empresas y he participado en el desarrollo
+                                algorítmico de videojuegos estilo novela visual.</p>
+                            <p><span class="prompt">user@sys_eng:~$</span> <span class="cursor"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skills-strip" aria-label="Stack tecnológico">
+                <span class="skill-badge">HTML5</span>
+                <span class="skill-badge">CSS3</span>
+                <span class="skill-badge">JavaScript</span>
+                <span class="skill-badge">Rust</span>
+                <span class="skill-badge">Java</span>
+                <span class="skill-badge">Python</span>
+                <span class="skill-badge">Linux</span>
+                <span class="skill-badge">Git</span>
+                <span class="skill-badge">UI / UX</span>
+                <span class="skill-badge">POO</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section container">
+        <h2 class="section-title glitch" data-i18n="title_projects" data-text=">BASE_DE_DATOS_PROYECTOS_">>BASE_DE_DATOS_PROYECTOS_</h2>
+        <div class="projects-grid">
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">FREELANCE / E-COMMERCE</div>
+                    <h3>BetterMancera</h3>
+                    <p data-i18n="proj_bettermancera_desc">Tienda en línea de distribuidores independientes Betterware. Catálogo de productos para el hogar con pagos seguros vía Stripe y backend en Supabase.</p>
+                    <div class="card-actions">
+                        <a href="https://bettermancera.vercel.app/" target="_blank" class="cyber-link">[ ACCEDER_ENLACE ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">FREELANCE / PROD</div>
+                    <h3>Mevek Electronics</h3>
+                    <p data-i18n="proj_mevek_desc">Sitio web comercial para tienda de electrónica local. Diseño adaptable y moderno para exhibición de productos tecnológicos.</p>
+                    <div class="card-actions">
+                        <a href="https://mevekelectronics.com/" target="_blank" class="cyber-link">[ ACCEDER_ENLACE ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">AI / ARCHITECTURE</div>
+                    <h3>Capi AI</h3>
+                    <p data-i18n="proj_capi_desc">Asistente de IA local en desarrollo para tesis universitaria. Arquitectura diseñada para ejecución eficiente en hardware local.</p>
+                    <div class="card-actions">
+                        <a href="https://github.com/diegodevxd/capiai" target="_blank" class="cyber-link">[ REPO_GITHUB ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">LOW-LEVEL / LINUX</div>
+                    <h3>Linux System Telemetry</h3>
+                    <p data-i18n="proj_telemetry_desc">Herramienta de bajo nivel para telemetría y monitoreo de sistemas Linux, enfocada en la gestión pura de recursos.</p>
+                    <div class="card-actions">
+                        <a href="https://github.com/diegodevxd/linux-system-telemetry" target="_blank" class="cyber-link">[ REPO_GITHUB ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">PORTFOLIO</div>
+                    <h3 data-i18n="proj_art_title">Portafolio Artístico</h3>
+                    <p data-i18n="proj_art_desc">Portafolio estilo SO creado para un artista, simulando una interfaz de sistema operativo interactiva para visualizar sus obras.</p>
+                    <div class="card-actions">
+                        <a href="https://diegodevxd.github.io/frutiger-aero-art-os/" target="_blank" class="cyber-link">[ ACCEDER_ENLACE ]</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+   <section id="certifications" class="section container">
+        <h2 class="section-title glitch" data-i18n="title_certifications" data-text=">CERTIFICACIONES_">>CERTIFICACIONES_</h2>
+        <div class="projects-grid">
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">LFX / KERNEL</div>
+                    <h3>LFD103: Linux Kernel Development</h3>
+                    <p data-i18n="cert_lfd103_desc">The Linux Foundation. Guía de fundamentos para el desarrollo y contribución en el Kernel de Linux.</p>
+                    <div class="card-actions">
+                        <a href="https://www.credly.com/badges/df6f510e-376f-4fcf-acd3-9e19fcfb353b/linked_in_profile" target="_blank" class="cyber-link">[ VERIFICAR_CREDLY ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">LFX / OPEN SOURCE</div>
+                    <h3>LFC102: Open Source Community</h3>
+                    <p data-i18n="cert_lfc102_desc">The Linux Foundation. Orientación inclusiva y metodologías de colaboración en comunidades Open Source.</p>
+                    <div class="card-actions">
+                        <a href="https://www.credly.com/badges/5538a318-b7de-4805-8d7e-1cc9871a16d0/linked_in_profile" target="_blank" class="cyber-link">[ VERIFICAR_CREDLY ]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">HARDWARE</div>
+                    <h3>CECATI (2020)</h3>
+                    <p data-i18n="cert_cecati_desc">Certificación en Mantenimiento Preventivo y Correctivo de Computadoras. Sólidos fundamentos en hardware y diagnóstico de sistemas.</p>
+                </div>
+            </div>
+
+            <div class="cyber-card">
+                <div class="card-lines"></div>
+                <div class="card-content">
+                    <div class="card-tag">SOFTWARE</div>
+                    <h3>Metaphorce</h3>
+                    <p data-i18n="cert_meta_desc">Certificación en Programación en Java. Conocimientos en desarrollo estructurado, Programación Orientada a Objetos y lógica empresarial.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer id="contact" class="footer container">
+        <h2 class="glitch" data-i18n="title_contact" data-text=">ESTABLECER_CONEXIÓN_">>ESTABLECER_CONEXIÓN_</h2>
+        <div class="social-links">
+            <div class="social-dock">
+                <a href="https://github.com/diegodevxd" target="_blank" rel="noopener noreferrer" class="dock-icon" aria-label="GitHub" data-tip="GITHUB_">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span class="dock-underline"></span>
+                </a>
+                <a href="https://www.linkedin.com/in/diego-fernando-mancera-gomez-73932540b/" target="_blank" rel="noopener noreferrer" class="dock-icon" aria-label="LinkedIn" data-tip="LINKEDIN_">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    <span class="dock-underline"></span>
+                </a>
+                <a href="https://www.tiktok.com/@capihw" target="_blank" rel="noopener noreferrer" class="dock-icon" aria-label="TikTok" data-tip="TIKTOK_">
+                    <svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0h88a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></svg>
+                    <span class="dock-underline"></span>
+                </a>
+                <a href="mailto:diegomancera.dev@gmail.com" class="dock-icon" aria-label="Email" data-tip="EMAIL_">
+                    <svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+                    <span class="dock-underline"></span>
+                </a>
+            </div>
+        </div>
+        <!-- 88x31 web badges – only visible in retro 2010 mode -->
+        <div class="retro-badges" aria-hidden="true">
+            <span class="badge88">★ sc3n3 k1d ★</span>
+            <span class="badge88">● MSN online</span>
+            <span class="badge88">♪ house 24/7</span>
+            <span class="badge88">winamp 4ever</span>
+        </div>
+        <p class="copyright">© 2026 SYS.ENG_DIEGO // TERMINAL OFFLINE</p>
+    </footer>
+
+    <!-- Three.js resolved via import map so bg3d.js stays build-free -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.min.js"
+        }
+    }
+    </script>
+    <script src="script.js"></script>
+    <script type="module" src="bg3d.js"></script>
+    <script src="retro.js" defer></script>
+</body>
+
+</html>

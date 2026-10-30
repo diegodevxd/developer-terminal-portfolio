@@ -27,3 +27,6 @@ fuentes/fuentes/
 # Cache del CLI de Supabase
 supabase/.temp/
 supabase/.branches/
+
+# Build de Vite
+dist/
