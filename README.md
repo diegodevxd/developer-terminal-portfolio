@@ -1,53 +1,65 @@
-# Portafolio Cyberpunk — Diego Mancera
+# Portafolio de Diego Mancera
 
-Portafolio personal con estética cyberpunk, construido con HTML, CSS y JavaScript puro (sin frameworks ni dependencias). Incluye fondo animado en canvas, soporte de dos idiomas (ES/EN) y un diseño responsive.
+Portafolio de una sola página, bilingüe (ES/EN), de Diego Mancera: desarrollador Full-Stack y
+contribuidor del kernel de Linux (León, MX). Producción: https://diegomancera.vercel.app/
 
-## Características
+El sitio anterior (HTML/CSS/JS) sigue disponible en la etiqueta de git `v1-legacy`.
 
-- **Fondo animado "digital rain":** animación tipo Matrix hecha con la API Canvas de HTML5. Se redimensiona con la ventana, se pausa cuando la pestaña no está visible y se desactiva si el usuario prefiere reducir el movimiento.
-- **Bilingüe (ES / EN):** cambio de idioma en el cliente con un sistema simple de `data-i18n`, sin recargar la página. El idioma elegido se recuerda con `localStorage`.
-- **Estética cyberpunk:** variables CSS para el tema, efectos de neón, líneas de escaneo, rejilla de fondo y un efecto glitch en los títulos.
-- **Responsive:** uso de grids flexibles y `clamp()` para adaptarse desde móvil hasta pantallas grandes. Menú lateral con hamburguesa en móvil.
-- **Detalles de UX:** resaltado de la sección activa en el menú al hacer scroll, animaciones de aparición y efecto de "arranque" en la terminal.
-- **Accesibilidad:** respeta `prefers-reduced-motion` y mantiene un contraste de texto legible.
+## Stack
 
-## Tecnologías
-
-- **HTML5** — estructura semántica.
-- **CSS3** — variables, grid/flexbox, animaciones.
-- **JavaScript (vanilla, ES6+)** — canvas, internacionalización, `IntersectionObserver`.
-- **Google Fonts** — Orbitron, Rajdhani y Fira Code.
+- Vite 6, React 19 y TypeScript (strict)
+- Tailwind CSS v4 con tokens en `src/styles/globals.css`
+- `motion` (reveals por scroll, cargado bajo demanda) y `lucide-react`; `simple-icons` para los logos del stack
+- Vitest y Testing Library; ESLint y Prettier
+- Despliegue en Vercel (sitio estático, carpeta `dist`)
 
 ## Estructura
 
 ```
-.
-├── index.html   # Estructura y contenido (con data-i18n)
-├── styles.css   # Estilos, animaciones y responsive
-├── script.js    # Canvas, i18n, scroll reveal y nav activo
-└── README.md
+src/
+├── app/            # main.tsx, App.tsx (orden de secciones), providers.tsx
+├── content/        # types.ts, es.ts, en.ts, index.ts: TODO el texto visible
+├── features/       # una carpeta por sección: hero, about, open-source, experience,
+│                   #   projects, stack, contact
+├── components/
+│   ├── ui/         # ascii-portrait, disc-cascade-carousel
+│   └── layout/     # SiteFrame, Navbar, SocialRail, Footer, SectionHeading, CornerFrame...
+├── hooks/          # useLocale, useContent, useActiveSection, useMediaQuery
+├── lib/            # utils.ts (cn) y lib/ascii/engine.ts (motor puro del retrato)
+└── styles/         # globals.css
+public/             # imágenes, CV en PDF, favicon, og-image, robots.txt, sitemap.xml
+scripts/            # make-portrait-mask.py, make-og-image.py
+docs/redesign/      # plan y prompts del rediseño
 ```
 
-## Cómo ejecutarlo
+Dependencias en una sola dirección: `app → features → components → lib`. Un `feature` nunca
+importa otro `feature`.
 
-No requiere instalación ni compilación. Puedes abrir `index.html` directamente en el navegador, o servirlo con un servidor local:
+## Cómo correrlo
 
 ```bash
-# Python
-python -m http.server 8000
-
-# Node.js
-npx http-server -p 8000
+npm install
+npm run dev       # servidor de desarrollo
+npm run lint      # ESLint
+npm test          # Vitest (modo watch); usa `npx vitest --run` para una sola pasada
+npm run build     # tsc -b y vite build -> dist/
+npm run preview   # sirve dist/ en local
 ```
 
-Luego abre `http://localhost:8000`.
+## Cómo editar el contenido
 
-## Despliegue
+Ningún texto visible vive en los componentes. Edita `src/content/es.ts` y `src/content/en.ts`
+(ambos deben cumplir el tipo de `src/content/types.ts`; un test verifica que tengan la misma
+forma). Los PDF del CV están en `public/cv/`.
 
-Desplegado en Vercel: https://developer-terminal-portfolio-dqg2.vercel.app/
+## Regenerar imágenes
 
-El CV (`cv/Diego_Mancera_CV.pdf`) y la imagen de previsualización (`og-image.jpg`, 1200×630) ya están incluidos, y los meta tags de Open Graph apuntan al dominio de producción.
+Requieren Python 3 con Pillow (`pip install pillow`):
 
-## Licencia
+```bash
+python -I scripts/make-portrait-mask.py   # máscara del retrato ASCII (public/images/diego-portrait-mask.png)
+python -I scripts/make-og-image.py        # public/og-image.png (1200x630)
+```
 
-MIT.
+`make-og-image.py` usa la fuente Antonio si están instalados `fonttools` y `brotli`
+(`pip install fonttools brotli`); si no, recurre a una fuente condensada del sistema.

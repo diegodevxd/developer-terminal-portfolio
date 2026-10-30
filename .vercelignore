@@ -1,11 +1,5 @@
-# Archivos que NO se publican en Vercel (pero sí quedan en el repo)
-
-# Código fuente de los Edge Functions (ya viven desplegados en Supabase, no en Vercel).
-supabase/
-
-# Flyer para redes (herramienta interna, se captura en local; no se publica)
-servicios/flyer.html
-
-# Skills locales
+# Herramientas locales de agentes y documentación interna: no se publican.
 .agents/
-skills-lock.json
+.claude/
+.codex/
+docs/

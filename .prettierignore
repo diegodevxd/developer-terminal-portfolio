@@ -2,16 +2,5 @@ dist
 node_modules
 package-lock.json
 coverage
-legacy-index.html
-index.html
-bg3d.js
-retro.js
-retro.css
-script.js
-styles.css
-servicios
-supabase
-servicio de paginas web
-fuentes
 public
 docs
